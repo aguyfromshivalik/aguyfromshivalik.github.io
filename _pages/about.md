@@ -28,8 +28,3 @@ Ciao!👋
 
 I come from Simalsera, a small village on the foothills of <a href='https://en.m.wikipedia.org/wiki/Himalayas'> Himalayas</a>, and some 40 km from a little town <a href='https://en.m.wikipedia.org/wiki/Kotdwar'> Kotdwara </a> in <a href='https://en.m.wikipedia.org/wiki/Uttarakhand'> Uttarakhand</a>, India.
 Currently, at University of Padova (UNiPD), I am working in the field of reaction dynamics and exploring ML applications in Chemistry. I obtained my PhD in Theoretical Chemistry under the guidance of <a href='http://chemistry.uohyd.ac.in/~sm/'> Prof. Susanta Mahapatra</a> from University of Hyderabad, Telangana, India. <a href='/research/'> Click here </a> to know more about my work. To get connected send an email at `ajay[dot]rawat[at]unipd[dot]it`.
-
-<br>
-<div align='center'>
-<iframe src="assets/current_add.html" height="200" width="500"></iframe>
-</div>
