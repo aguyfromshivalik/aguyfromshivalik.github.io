@@ -7,7 +7,7 @@ nav: true
 nav_order: 2
 ---
 
-My current workplace.
+My workplace
 
 <iframe src="/assets/current_add.html" height="200" width="500"></iframe>
 
