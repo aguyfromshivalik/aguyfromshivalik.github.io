@@ -2,7 +2,9 @@
 layout: page
 permalink: /contact/
 title: Contact
-description:
+description: # News
+nav: true
+nav_order: 2
 ---
 
 My current workplace.
