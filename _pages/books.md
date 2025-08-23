@@ -1,13 +1,14 @@
 ---
 layout: book-shelf
-title: bookshelf
+title: Bookshelf
 permalink: /books/
 nav: false
 collection: books
 ---
 
-> What an astonishing thing a book is. It's a flat object made from a tree with flexible parts on which are imprinted lots of funny dark squiggles. But one glance at it and you're inside the mind of another person, maybe somebody dead for thousands of years. Across the millennia, an author is speaking clearly and silently inside your head, directly to you. Writing is perhaps the greatest of human inventions, binding together people who never knew each other, citizens of distant epochs. Books break the shackles of time. A book is proof that humans are capable of working magic.
->
-> -- Carl Sagan, Cosmos, Part 11: The Persistence of Memory (1980)
+**From an instagram post:**
 
-## Books that I am reading, have read, or will read
+When it comes to fictions, read what you like. Don't go out there and furiously hunt for the classics or the books the community recommends. There are no great writers or mediocre ones; it is just the experience of the reader that makes the writing unique. One may connect and have a profound experience with so-called mediocre writing, and one may read all the so-called classics and never feel a word.
+Remember, a reader's journey, in a way, is very intimate because the experiences when reading a book are unique. Expression (for a writer) and experience (for a reader) are at the very core of any book or art; any other liability an art is supposed to have comes much later."
+
+## What I have read?
