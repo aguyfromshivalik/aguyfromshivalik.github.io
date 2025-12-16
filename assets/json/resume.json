@@ -113,18 +113,18 @@
   ],
   "publications": [
     {
-      "name": "Zur Elektrody/namik bewegter Körper",
-      "publisher": "Annalen der Physik",
-      "releaseDate": "1905-06-30",
-      "url": "https://en.wikisource.org/wiki/Translation:On_the_Electrodynamics_of_Moving_Bodies",
-      "summary": "It concerned an interpretation of the Michelson–Morley experiment and the properties of light and time. Special relativity incorporates the principle that the speed of light is the same for all inertial observers regardless of the state of motion of the source."
+      "name": "State-to-state dynamics of H + LiHe<sup>+</sup> (<i>v</i> = 0, <i>j</i> = 0) $\rightarrow$ LiH<sup>+</sup> + He reaction",
+      "publisher": "J. Chem. Phys.",
+      "releaseDate": "2025",
+      "url": "https://doi.org/10.1063/5.0272519",
+      "summary": " "
     },
     {
-      "name": "Über einen die Erzeugung und Verwandlung des Lichtes betreffenden heuristischen Gesichtspunkt",
-      "publisher": "Annalen der Physik",
-      "releaseDate": "1905-03-18",
-      "url": "https://de.wikisource.org/wiki/Über_einen_die_Erzeugung_und_Verwandlung_des_Lichtes_betreffenden_heuristischen_Gesichtspunkt",
-      "summary": "In the second paper, he applied the quantum theory to light to explain the photoelectric effect. In particular, he used the idea of light quanta (photons) to explain experimental results, but stressed the importance of the experimental results. The importance of his work on the photoelectric effect earned him the Nobel Prize in Physics in 1921."
+      "name": "Quantum interference in the mechanism of H + LiH<sup>+</sup> $\rightarrow$ H<sub>2</sub><sup>+</sup> + Li<sup>+</sup> reaction dynamics",
+      "publisher": "Phys. Chem. Chem. Phys.",
+      "releaseDate": "2021",
+      "url": "http://dx.doi.org/10.1039/D1CP04120G",
+      "summary": " "
     },
     {
       "name": "Die Grundlage der allgemeinen Relativitätstheorie",
