@@ -73,7 +73,7 @@ ninja.data = [{
           section: "News",},{id: "news-our-work-on-the-dynamics-of-h-lihe-v-0-j-0-lih-he-reaction-got-accepted-for-the-publication-in-journal-of-chemical-physics-jcp-sparkles",
           title: 'Our work on the dynamics of H + LiHe+ (v = 0, j...',
           description: "",
-          section: "News",},{id: "news-our-work-on-the-dynamics-of-h-lihe-v-0-j-0-lih-he-reaction-is-live-on-journal-of-chemical-physics-jcp-sparkles",
+          section: "News",},{id: "news-our-work-on-the-dynamics-of-h-lihe-v-0-j-0-lih-he-reaction-is-live-on-journal-of-chemical-physics-jcp",
           title: 'Our work on the dynamics of H + LiHe+ (v = 0, j...',
           description: "",
           section: "News",},{id: "projects-project-1",
