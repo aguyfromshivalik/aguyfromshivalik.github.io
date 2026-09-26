@@ -7,7 +7,7 @@ first_name: Ajay
 middle_name: M.
 last_name: Rawat
 contact_note: >
-  Write an email for quick reply. # edited by AJ
+
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   Personal website of Ajay M. Rawat.
 footer_text: >
