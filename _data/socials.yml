@@ -4,7 +4,7 @@
 
 orcid_id: 0009-0000-9395-8194 # your ORCID ID
 scholar_userid: W15sff4AAAAJ # your Google Scholar ID
-rss_icon: true # comment this line to hide the RSS icon
+# rss_icon: true # comment this line to hide the RSS icon
 
 # acm_id: # your dl.acm.org/profile/id
 # blogger_url: # your blogger URL
