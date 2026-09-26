@@ -6,16 +6,16 @@ subtitle: Postdoc at <a href='https://www.chimica.unipd.it/'> DiSC</a> in <a hre
 profile:
   align: right
   image: profile_pic.jpg
-  image_circular: false # crops the image to make it circular
+  image_circular: true # crops the image to make it circular
   more_info: 
     
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
-social: false # includes social icons at the bottom of the page (true/false)
+social: true # includes social icons at the bottom of the page (true/false)
 
 announcements:
   enabled: true # includes a list of news items
-  scrollable: fasle # adds a vertical scroll bar if there are more than 3 news items
+  scrollable: true # adds a vertical scroll bar if there are more than 3 news items
   limit: # leave blank to include all the news in the `_news` folder
 
 latest_posts:
