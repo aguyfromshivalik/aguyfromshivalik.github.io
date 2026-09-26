@@ -14,3 +14,8 @@ don't change their chemical form, whereas in the third, reactants transform to d
 reaction system. <br> 
 However, computationally, it is not an easy task and requires accurate and instantaneous calculation of potential energes (or forces) of the chemical system at different spatial configurations 
 in time. This generates a need to find an analytical equation of potential as a function of spatial configuration of the system, a process which is termed as construction of potential energy surface (PES). This is an important and still evolving field of research. <u>Construction of PES</u> using machine learning and non-machine learning methods was also explored during my PhD work. </p>
+
+<p style="text-align:center; margin: 1.5em 0;">
+  <img src="{{ '/assets/img/pes3d_construction.gif' | relative_url }}" alt="Illustrative 3D PES construction to dynamics workflow" style="max-width:100%; height:auto;">
+</p>
+
