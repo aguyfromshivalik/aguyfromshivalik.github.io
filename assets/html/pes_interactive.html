@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Potential Energy Surface — Sampling to Dynamics</title>
+<style>
+  :root{
+    --paper:#f2efe6;
+    --ink:#1b2430;
+    --muted:#83887f;
+    --teal:#0f6f66;
+    --copper:#b5541c;
+    --gold:#d1a13a;
+    --line: rgba(27,36,48,0.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12161c;
+      --ink:#eef0ea;
+      --muted:#8b9199;
+      --line: rgba(255,255,255,0.10);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12161c;
+    --ink:#eef0ea;
+    --muted:#8b9199;
+    --line: rgba(255,255,255,0.10);
+  }
+  *{box-sizing:border-box;}
+  html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    overflow-x:hidden;
+  }
+  .pes-wrap{
+    max-width:980px;
+    margin:0 auto;
+    padding:0.55rem 0.9rem 0.65rem;
+    height:100%;
+    overflow:hidden;
+  }
+  .pes-intro{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:1.5rem;
+    margin-bottom:0.45rem;
+    flex-wrap:wrap;
+  }
+  .pes-intro p{
+    margin:0;
+    max-width:52ch;
+    font-size:0.91rem;
+    line-height:1.35;
+    color:var(--ink);
+  }
+  .pes-intro .hint{
+    margin:0;
+    font-size:0.76rem;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .pes-stage{
+    display:block;
+    font-size:0.98rem;
+    font-style:italic;
+    color:var(--muted);
+    min-height:1.4em;
+  }
+  .pes-canvas-frame{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/9;
+    max-height:calc(100vh - 118px);
+    border-radius:14px;
+    overflow:hidden;
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/32px 32px,
+      var(--paper);
+    border:1px solid var(--line);
+    touch-action:none;
+    cursor:grab;
+  }
+  .pes-canvas-frame:active{ cursor:grabbing; }
+  .pes-canvas-frame canvas{ display:block; width:100%; height:100%; }
+
+  .pes-controls{
+    display:flex;
+    align-items:center;
+    gap:0.9rem;
+    margin-top:0.45rem;
+  }
+  .pes-play{
+    flex:0 0 auto;
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .pes-play:hover{ border-color:var(--copper); color:var(--copper); }
+  .pes-play svg{ width:14px; height:14px; }
+
+  .pes-stepper{
+    flex:1 1 auto;
+    position:relative;
+    height:34px;
+  }
+  .pes-stepper svg{ width:100%; height:100%; overflow:visible; display:block; }
+  .pes-node{ cursor:pointer; }
+  .pes-node text{
+    font-family:"Space Grotesk","IBM Plex Sans",system-ui,sans-serif;
+    font-size:11.5px;
+    fill:var(--muted);
+    user-select:none;
+  }
+  .pes-node.active text{ fill:var(--ink); font-weight:600; }
+  .pes-node.done text{ fill:var(--teal); }
+
+  .pes-foot{
+    margin-top:0.15rem;
+    font-size:0.68rem;
+    color:var(--muted);
+  }
+  .pes-foot a{ color:inherit; }
+
+  .pes-mobile-stage{
+    display:none;
+    font-size:0.86rem;
+    font-weight:600;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  @media (max-width:560px){
+    .pes-intro .hint{ display:none; }
+    .pes-node text{ display:none; }
+    .pes-mobile-stage{ display:inline-block; }
+  }
+  @media (max-width:700px){
+    .pes-wrap{padding:0.35rem 0.5rem 0.45rem;}
+    .pes-intro .hint{display:none;}
+    .pes-intro p{font-size:0.84rem;}
+    .pes-canvas-frame{
+      aspect-ratio:4/3;
+      max-height:calc(100vh - 112px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .pes-canvas-frame{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="pes-wrap">
+  <div class="pes-intro">
+    <p>A potential energy surface, built the way we actually build one: sample configurations, compute their energies, fit a surface through them, then run dynamics on top of it. <span class="pes-stage" id="pesStageCaption"></span></p>
+    <p class="hint">drag to rotate · scroll to zoom</p>
+  </div>
+
+  <div class="pes-canvas-frame" id="pesFrame"></div>
+
+  <div class="pes-controls">
+    <button class="pes-play" id="pesPlay" aria-label="Play">
+      <svg id="pesPlayIcon" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 15,8 3,15"></polygon></svg>
+    </button>
+    <div class="pes-stepper"><svg id="pesStepperSvg"></svg></div>
+    <span class="pes-mobile-stage" id="pesMobileStage"></span>
+  </div>
+
+  <!-- <p class="pes-foot">Rendered live in your browser with Three.js — nothing here is a video.</p>
+  --->
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  // ---------------------------------------------------------------
+  // Palette
+  // ---------------------------------------------------------------
+  const COL = {
+    ink: 0x1b2430, copper: 0xb5541c, teal: 0x0f6f66, gold: 0xd1a13a,
+    sample: 0x1f8fa0, muted: 0x9aa08f
+  };
+  const STAGE_NAMES = ["Sampling configurations", "Ab initio energies", "Fitting the PES", "Reaction dynamics"];
+  const STAGE_CAPTIONS = [
+    "Scattering configurations across the (R\u2081, R\u2082) landscape.",
+    "Each configuration gets its true energy, computed point by point.",
+    "A smooth surface is fit through the scattered energies.",
+    "A trajectory crosses the surface, reactants to products."
+  ];
+  const STAGE_DUR = [2600, 2600, 3600, 5200]; // ms, one full pass
+  const HOLD_MS = 1400; // pause on the finished trajectory before looping
+
+  // ---------------------------------------------------------------
+  // PES definition — three shallow wells (left / centre-deep / right)
+  // ---------------------------------------------------------------
+  const WELLS = [
+    [0.17, 0.40, 0.70, 0.085, 0.19],
+    [0.50, 0.52, 1.00, 0.110, 0.140],
+    [0.83, 0.64, 0.80, 0.090, 0.140],
+  ];
+  function V(x, y) {
+    let v = 0.25 * ((x - 0.5) ** 2 + (y - 0.5) ** 2);
+    for (const [x0, y0, a, sx, sy] of WELLS) {
+      v -= a * Math.exp(-(((x - x0) ** 2) / (2 * sx * sx) + ((y - y0) ** 2) / (2 * sy * sy)));
+    }
+    return v;
+  }
+
+  const N = 64;
+  const heights = new Float32Array(N * N);
+  let zmin = Infinity, zmax = -Infinity;
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < N; j++) {
+      const x = i / (N - 1), y = j / (N - 1);
+      const v = V(x, y);
+      heights[i * N + j] = v;
+      if (v < zmin) zmin = v;
+      if (v > zmax) zmax = v;
+    }
+  }
+  function boxBlur(src, passes) {
+    let a = src.slice();
+    for (let p = 0; p < passes; p++) {
+      const b = new Float32Array(N * N);
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          let sum = 0, cnt = 0;
+          for (let di = -1; di <= 1; di++) {
+            for (let dj = -1; dj <= 1; dj++) {
+              const ii = i + di, jj = j + dj;
+              if (ii >= 0 && ii < N && jj >= 0 && jj < N) { sum += a[ii * N + jj]; cnt++; }
+            }
+          }
+          b[i * N + j] = sum / cnt;
+        }
+      }
+      a = b;
+    }
+    return a;
+  }
+  const heightsBlur = boxBlur(heights, 12);
+
+  const floorY = 0.0;
+  // A square footprint with near-full-height relief makes this look like a
+  // spiky tent; matplotlib's pleasant "landscape" read comes from
+  // elongating one horizontal axis and compressing the vertical one
+  // (box_aspect). Match that here instead of a 1:1:1 box.
+  const SCALE_X = 9.4;     // R1 footprint (elongated)
+  const SCALE_Z = 6.0;     // R2 footprint
+  const HSCALE = 3.6;      // vertical relief, compressed relative to footprint
+
+  function worldX(x) { return (x - 0.5) * SCALE_X; }
+  function worldZ(y) { return (y - 0.5) * SCALE_Z; }
+  function worldY(v) { return (v - zmin) / (zmax - zmin) * HSCALE; }
+
+  function smoothstep(t) { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  const RAMP = [
+    [0x0c,0x4a,0x6e],[0x0e,0x74,0x90],[0x14,0xb8,0xa6],
+    [0xa7,0xc9,0x57],[0xd1,0xa1,0x3a],[0xfb,0xe8,0xa6],
+  ];
+  function rampColor(t) {
+    t = Math.min(1, Math.max(0, t));
+    const n = RAMP.length - 1;
+    const f = t * n;
+    const i = Math.min(n - 1, Math.floor(f));
+    const fr = f - i;
+    const c0 = RAMP[i], c1 = RAMP[i + 1];
+    return [
+      lerp(c0[0], c1[0], fr) / 255,
+      lerp(c0[1], c1[1], fr) / 255,
+      lerp(c0[2], c1[2], fr) / 255,
+    ];
+  }
+
+  // ---------------------------------------------------------------
+  // Sample points (configurations)
+  // ---------------------------------------------------------------
+  function mulberry32(seed) {
+    return function() {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const rnd = mulberry32(7);
+  const NP = 140;
+  const PX = new Float32Array(NP), PY = new Float32Array(NP), PZ = new Float32Array(NP);
+  const order = new Float32Array(NP);
+  for (let k = 0; k < NP; k++) {
+    PX[k] = 0.04 + rnd() * 0.92;
+    PY[k] = 0.04 + rnd() * 0.92;
+    PZ[k] = V(PX[k], PY[k]);
+    order[k] = k;
+  }
+  // shuffle order (deterministic) for staggered reveal / lift timing
+  for (let k = NP - 1; k > 0; k--) {
+    const j = Math.floor(rnd() * (k + 1));
+    const tmp = order[k]; order[k] = order[j]; order[j] = tmp;
+  }
+  const lagOf = new Float32Array(NP);
+  for (let k = 0; k < NP; k++) lagOf[order[k]] = (k / NP) * 0.55;
+
+  // ---------------------------------------------------------------
+  // Trajectory (Catmull-Rom through the same reactant->product route)
+  // ---------------------------------------------------------------
+  const WAY = [
+    [0.15,0.33],[0.19,0.46],[0.15,0.41],[0.21,0.43],[0.33,0.47],
+    [0.45,0.49],[0.54,0.57],[0.47,0.54],[0.55,0.50],[0.67,0.58],
+    [0.79,0.67],[0.86,0.62],[0.81,0.65],[0.83,0.64]
+  ];
+  function trajXY(s) {
+    const n = WAY.length - 1;
+    const u = Math.min(1, Math.max(0, s)) * n;
+    const i = Math.min(n - 1, Math.floor(u));
+    const f = u - i;
+    const p0 = WAY[Math.max(i - 1, 0)], p1 = WAY[i], p2 = WAY[i + 1], p3 = WAY[Math.min(i + 2, n)];
+    const qx = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * f + (2*p0[0]-5*p1[0]+4*p2[0]-p3[0]) * f*f + (-p0[0]+3*p1[0]-3*p2[0]+p3[0]) * f*f*f);
+    const qy = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * f + (2*p0[1]-5*p1[1]+4*p2[1]-p3[1]) * f*f + (-p0[1]+3*p1[1]-3*p2[1]+p3[1]) * f*f*f);
+    return [qx, qy];
+  }
+  const PATH_N = 260;
+  const PATH = [];
+  for (let k = 0; k < PATH_N; k++) {
+    const s = k / (PATH_N - 1);
+    const [x, y] = trajXY(s);
+    PATH.push([x, y, V(x, y) + 0.03]);
+  }
+
+  // ---------------------------------------------------------------
+  // Three.js scene
+  // ---------------------------------------------------------------
+  const frame = document.getElementById("pesFrame");
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  frame.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.65);
+  dl.position.set(4, 8, 5);
+  scene.add(dl);
+
+  // --- orbit state (manual, no extra dependency) ---
+  let azim = -0.95, elev = 0.5, radius = 16.5;
+  const target = new THREE.Vector3(0, HSCALE * 0.5, 0);
+  function updateCamera() {
+    const e = Math.min(1.15, Math.max(0.18, elev));
+    camera.position.set(
+      target.x + radius * Math.cos(e) * Math.sin(azim),
+      target.y + radius * Math.sin(e),
+      target.z + radius * Math.cos(e) * Math.cos(azim)
+    );
+    camera.lookAt(target);
+  }
+  updateCamera();
+
+  // --- surface mesh ---
+  const surfGeo = new THREE.PlaneGeometry(SCALE_X, SCALE_Z, N - 1, N - 1);
+  surfGeo.rotateX(-Math.PI / 2);
+  const surfPos = surfGeo.attributes.position;
+  const surfColor = new Float32Array(surfPos.count * 3);
+  surfGeo.setAttribute("color", new THREE.BufferAttribute(surfColor, 3));
+  const surfMat = new THREE.MeshStandardMaterial({
+    vertexColors: true, roughness: 0.85, metalness: 0.0,
+    side: THREE.DoubleSide, wireframe: false
+  });
+  const surfMesh = new THREE.Mesh(surfGeo, surfMat);
+  scene.add(surfMesh);
+
+  // thin wire overlay for a hand-drafted, technical feel
+  const wireMat = new THREE.MeshBasicMaterial({ color: COL.ink, wireframe: true, transparent: true, opacity: 0.06 });
+  const wireMesh = new THREE.Mesh(surfGeo, wireMat);
+  scene.add(wireMesh);
+
+  function setSurfaceHeights(hArr) {
+    const gridW = N; // plane's (widthSeg+1) matches N because we built with N-1 segments
+    for (let iy = 0; iy < N; iy++) {
+      for (let ix = 0; ix < N; ix++) {
+        const srcIdx = ix * N + iy; // heights indexed [i*N+j] with i along x, j along y
+        // PlaneGeometry vertex order: row-major, y from +half to -half, x from -half to +half
+        const vIdx = iy * gridW + ix;
+        const v = hArr[srcIdx];
+        surfPos.setY(vIdx, worldY(v));
+        const c = rampColor((v - zmin) / (zmax - zmin));
+        surfColor[vIdx * 3] = c[0]; surfColor[vIdx * 3 + 1] = c[1]; surfColor[vIdx * 3 + 2] = c[2];
+      }
+    }
+    surfPos.needsUpdate = true;
+    surfGeo.attributes.color.needsUpdate = true;
+    surfGeo.computeVertexNormals();
+  }
+
+  // --- floor "contour map" plane (banded colour, no displacement) ---
+  const floorGeo = new THREE.PlaneGeometry(SCALE_X, SCALE_Z, N - 1, N - 1);
+  floorGeo.rotateX(-Math.PI / 2);
+  floorGeo.translate(0, floorY, 0);
+  const floorColor = new Float32Array(floorGeo.attributes.position.count * 3);
+  floorGeo.setAttribute("color", new THREE.BufferAttribute(floorColor, 3));
+  for (let iy = 0; iy < N; iy++) {
+    for (let ix = 0; ix < N; ix++) {
+      const srcIdx = ix * N + iy;
+      const vIdx = iy * N + ix;
+      const t = (heights[srcIdx] - zmin) / (zmax - zmin);
+      const banded = Math.round(t * 9) / 9;
+      const c = rampColor(banded);
+      floorColor[vIdx * 3] = c[0]; floorColor[vIdx * 3 + 1] = c[1]; floorColor[vIdx * 3 + 2] = c[2];
+    }
+  }
+  floorGeo.attributes.color.needsUpdate = true;
+  const floorMat = new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.4 });
+  const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+  scene.add(floorMesh);
+
+  // --- sample points ---
+  const ptGeo = new THREE.BufferGeometry();
+  const ptPos = new Float32Array(NP * 3);
+  const ptCol = new Float32Array(NP * 3);
+  const ptAlpha = new Float32Array(NP);
+  ptGeo.setAttribute("position", new THREE.BufferAttribute(ptPos, 3));
+  ptGeo.setAttribute("color", new THREE.BufferAttribute(ptCol, 3));
+  const sampleColHex = new THREE.Color(COL.sample);
+  for (let k = 0; k < NP; k++) {
+    ptCol[k*3] = sampleColHex.r; ptCol[k*3+1] = sampleColHex.g; ptCol[k*3+2] = sampleColHex.b;
+  }
+  const ptMat = new THREE.PointsMaterial({
+    size: 0.20, vertexColors: true, transparent: true, opacity: 1,
+    sizeAttenuation: true, depthWrite: false
+  });
+  const points = new THREE.Points(ptGeo, ptMat);
+  scene.add(points);
+
+  // Vertical "energy sticks" make the ab initio calculation visually explicit:
+  // each sampled configuration is connected from the configuration plane to
+  // its computed energy. They are only shown during the ab initio stage.
+  const energyStickPos = new Float32Array(NP * 6);
+  const energyStickGeo = new THREE.BufferGeometry();
+  energyStickGeo.setAttribute("position", new THREE.BufferAttribute(energyStickPos, 3));
+  const energyStickMat = new THREE.LineBasicMaterial({
+    color: COL.copper, transparent: true, opacity: 0.9
+  });
+  const energySticks = new THREE.LineSegments(energyStickGeo, energyStickMat);
+  energySticks.visible = false;
+  scene.add(energySticks);
+
+  function updateEnergySticks(t) {
+    for (let k = 0; k < NP; k++) {
+      const lift = smoothstep((t - lagOf[k]) / 0.45);
+      const x = worldX(PX[k]), z = worldZ(PY[k]);
+      const y0 = worldY(zmin) - 0.02;
+      const y1 = lerp(y0, worldY(PZ[k]), lift);
+      energyStickPos[k*6] = x;
+      energyStickPos[k*6+1] = y0;
+      energyStickPos[k*6+2] = z;
+      energyStickPos[k*6+3] = x;
+      energyStickPos[k*6+4] = y1;
+      energyStickPos[k*6+5] = z;
+    }
+    energyStickGeo.attributes.position.needsUpdate = true;
+  }
+
+  function setPoints(px, py, pz, opacity) {
+    for (let k = 0; k < NP; k++) {
+      ptPos[k*3] = worldX(px[k]);
+      ptPos[k*3+1] = worldY(pz[k]);
+      ptPos[k*3+2] = worldZ(py[k]);
+    }
+    ptGeo.attributes.position.needsUpdate = true;
+    ptMat.opacity = opacity;
+  }
+
+  // --- trajectory line + leading marker ---
+  const pathPos = new Float32Array(PATH_N * 3);
+  const pathGeo = new THREE.BufferGeometry();
+  pathGeo.setAttribute("position", new THREE.BufferAttribute(pathPos, 3));
+  pathGeo.setDrawRange(0, 0);
+  const pathMat = new THREE.LineBasicMaterial({ color: COL.copper, linewidth: 2 });
+  const pathLine = new THREE.Line(pathGeo, pathMat);
+  scene.add(pathLine);
+
+  const headGeo = new THREE.SphereGeometry(0.09, 16, 16);
+  const headMat = new THREE.MeshStandardMaterial({ color: COL.copper, roughness: 0.4 });
+  const head = new THREE.Mesh(headGeo, headMat);
+  scene.add(head);
+  head.visible = false;
+
+  // --- text sprites (axis + reactant/product labels) ---
+  function makeLabel(text, color, fontPx) {
+    const cnv = document.createElement("canvas");
+    const ctx = cnv.getContext("2d");
+    const scale = 4;
+    ctx.font = `${fontPx * scale}px "Space Grotesk", sans-serif`;
+    const w = Math.ceil(ctx.measureText(text).width) + 24 * scale;
+    cnv.width = w; cnv.height = fontPx * scale * 1.6;
+    ctx.font = `${fontPx * scale}px "Space Grotesk", sans-serif`;
+    ctx.fillStyle = color;
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, 12 * scale, cnv.height / 2);
+    const tex = new THREE.CanvasTexture(cnv);
+    tex.needsUpdate = true;
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false });
+    const spr = new THREE.Sprite(mat);
+    spr.renderOrder = 999;
+    const aspect = cnv.width / cnv.height;
+    const h = 0.42;
+    spr.scale.set(h * aspect, h, 1);
+    return spr;
+  }
+  const inkCss = "#1b2430";
+  const mutedCss = "#83887f";
+  const axR1 = makeLabel("R\u2081", mutedCss, 30); axR1.position.set(worldX(1.02), 0.05, worldZ(-0.04)); scene.add(axR1);
+  const axR2 = makeLabel("R\u2082", mutedCss, 30); axR2.position.set(worldX(-0.04), 0.05, worldZ(1.02)); scene.add(axR2);
+  const axE  = makeLabel("E", mutedCss, 30); axE.position.set(worldX(-0.06), HSCALE * 0.55, worldZ(-0.06)); scene.add(axE);
+
+  const lblReact = makeLabel("Reactants", inkCss, 30);
+  lblReact.position.set(worldX(0.17), worldY(V(0.17,0.40)) + 1.1, worldZ(0.40));
+  const lblProd = makeLabel("Products", inkCss, 30);
+  lblProd.position.set(worldX(0.83), worldY(V(0.83,0.64)) + 1.1, worldZ(0.64));
+  lblReact.visible = false; lblProd.visible = false;
+  scene.add(lblReact); scene.add(lblProd);
+
+  // ---------------------------------------------------------------
+  // Resize
+  // ---------------------------------------------------------------
+  function resize() {
+    const w = frame.clientWidth, h = frame.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  // ---------------------------------------------------------------
+  // Pointer drag / wheel zoom
+  // ---------------------------------------------------------------
+  let dragging = false, lastX = 0, lastY = 0;
+  frame.addEventListener("pointerdown", (e) => {
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+    frame.setPointerCapture(e.pointerId);
+  });
+  frame.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    azim -= dx * 0.006;
+    elev += dy * 0.005;
+    updateCamera();
+  });
+  frame.addEventListener("pointerup", () => { dragging = false; });
+  frame.addEventListener("pointerleave", () => { dragging = false; });
+  frame.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    radius = Math.min(28, Math.max(9, radius + e.deltaY * 0.01));
+    updateCamera();
+  }, { passive: false });
+
+  // ---------------------------------------------------------------
+  // Stepper UI (SVG contour-line with 4 nodes)
+  // ---------------------------------------------------------------
+  const stepperSvg = document.getElementById("pesStepperSvg");
+  const stageCaption = document.getElementById("pesStageCaption");
+  const mobileStage = document.getElementById("pesMobileStage");
+  let stageNodes = [];
+  function buildStepper() {
+    const w = document.querySelector(".pes-stepper").clientWidth || 600;
+    const h = 34;
+    const y = h / 2 + 4;
+    const xs = [0.06, 0.36, 0.66, 0.94].map(f => f * w);
+    let path = `M ${xs[0]} ${y}`;
+    for (let i = 1; i < xs.length; i++) {
+      const midx = (xs[i-1] + xs[i]) / 2;
+      path += ` Q ${midx} ${y - 9} ${xs[i]} ${y}`;
+    }
+    let svg = `<path d="${path}" fill="none" stroke="var(--line)" stroke-width="1.5"/>`;
+    stageNodes = [];
+    xs.forEach((x, i) => {
+      svg += `<g class="pes-node" data-i="${i}">
+        <circle cx="${x}" cy="${y}" r="5" fill="var(--paper)" stroke="var(--muted)" stroke-width="1.6" data-role="dot"/>
+        <text x="${x}" y="${y - 13}" text-anchor="${i===0?"start":(i===xs.length-1?"end":"middle")}">${STAGE_NAMES[i]}</text>
+      </g>`;
+    });
+    stepperSvg.innerHTML = svg;
+    stepperSvg.querySelectorAll(".pes-node").forEach((g) => {
+      g.addEventListener("click", () => jumpTo(parseInt(g.dataset.i, 10)));
+    });
+  }
+  function paintStepper(stage, frac) {
+    stepperSvg.querySelectorAll(".pes-node").forEach((g) => {
+      const i = parseInt(g.dataset.i, 10);
+      const dot = g.querySelector("circle");
+      g.classList.remove("active", "done");
+      if (i < stage) {
+        g.classList.add("done");
+        dot.setAttribute("fill", "var(--teal)");
+        dot.setAttribute("stroke", "var(--teal)");
+      } else if (i === stage) {
+        g.classList.add("active");
+        dot.setAttribute("fill", "var(--copper)");
+        dot.setAttribute("stroke", "var(--copper)");
+      } else {
+        dot.setAttribute("fill", "var(--paper)");
+        dot.setAttribute("stroke", "var(--muted)");
+      }
+    });
+  }
+  buildStepper();
+  window.addEventListener("resize", buildStepper);
+
+  // ---------------------------------------------------------------
+  // Animation state machine
+  // ---------------------------------------------------------------
+  let stage = 0;       // 0..3
+  let stageStart = performance.now();
+  let playing = false;
+  let holdUntil = null;
+
+  const playBtn = document.getElementById("pesPlay");
+  const playIcon = document.getElementById("pesPlayIcon");
+  function setPlayIcon() {
+    playIcon.innerHTML = playing
+      ? '<rect x="3" y="2" width="3.4" height="12"></rect><rect x="9.6" y="2" width="3.4" height="12"></rect>'
+      : '<polygon points="3,1 15,8 3,15"></polygon>';
+  }
+  playBtn.addEventListener("click", () => {
+    playing = !playing;
+    if (playing) { stageStart = performance.now() - currentFrac * STAGE_DUR[stage]; holdUntil = null; }
+    setPlayIcon();
+  });
+
+  function jumpTo(i) {
+    stage = i;
+    currentFrac = 1;
+    stageStart = performance.now() - STAGE_DUR[stage];
+    playing = false;
+    holdUntil = null;
+    setPlayIcon();
+    renderStage(stage, 1);
+  }
+
+  let currentFrac = 0;
+
+  function renderStage(s, t) {
+    stageCaption.textContent = STAGE_CAPTIONS[s];
+    mobileStage.textContent = STAGE_NAMES[s];
+    paintStepper(s, t);
+    lblReact.visible = false; lblProd.visible = false;
+    head.visible = false;
+    pathLine.visible = false;
+    floorMesh.material.opacity = 0.22;
+    energySticks.visible = false;
+
+    if (s === 0) {
+      // Sampling: points appear on the floor, staggered by shuffled order.
+      // Points not yet "revealed" are parked far outside the view frustum
+      // (colour alone can't hide a vertex-coloured point — it just goes
+      // black instead of invisible).
+      // Keep a visible seed of configurations at the very start, then
+      // reveal the rest across the sampling stage. This makes the
+      // "Sampling configurations" state readable even on the first frame.
+      const n = Math.ceil(NP * (0.22 + 0.78 * smoothstep(t / 0.72)));
+      for (let k = 0; k < NP; k++) {
+        const revealed = k < n;
+        ptPos[k*3]   = revealed ? worldX(PX[k]) : 9999;
+        ptPos[k*3+1] = revealed ? 0.055 : 9999;
+        ptPos[k*3+2] = revealed ? worldZ(PY[k]) : 9999;
+        ptCol[k*3]   = sampleColHex.r;
+        ptCol[k*3+1] = sampleColHex.g;
+        ptCol[k*3+2] = sampleColHex.b;
+      }
+      ptGeo.attributes.position.needsUpdate = true;
+      ptGeo.attributes.color.needsUpdate = true;
+      ptMat.opacity = 1;
+      surfMesh.visible = false;
+      wireMesh.visible = false;
+
+    } else if (s === 1) {
+      // Ab initio energies: points lift from floor to their true energy, staggered
+      const px = PX, py = PY;
+      const pz = new Float32Array(NP);
+      for (let k = 0; k < NP; k++) {
+        const lift = smoothstep((t - lagOf[k]) / 0.45);
+        pz[k] = lerp(zmin, PZ[k], lift);
+        ptCol[k*3] = sampleColHex.r; ptCol[k*3+1] = sampleColHex.g; ptCol[k*3+2] = sampleColHex.b;
+      }
+      ptGeo.attributes.color.needsUpdate = true;
+      setPoints(px, py, pz, 1);
+      updateEnergySticks(t);
+      energySticks.visible = true;
+      surfMesh.visible = false;
+      wireMesh.visible = false;
+
+    } else if (s === 2) {
+      // Fit PES: surface morphs from heavily blurred to the true fitted surface
+      surfMesh.visible = true; wireMesh.visible = true;
+      const k = smoothstep(t / 0.9);
+      const blended = new Float32Array(N * N);
+      for (let idx = 0; idx < N * N; idx++) blended[idx] = lerp(heightsBlur[idx], heights[idx], k);
+      setSurfaceHeights(blended);
+      const px = PX, py = PY, pz = PZ;
+      const op = 1 - 0.85 * smoothstep((t - 0.55) / 0.45);
+      setPoints(px, py, pz, op);
+
+    } else {
+      // Dynamics: static fitted surface + trajectory reveal
+      surfMesh.visible = true; wireMesh.visible = true;
+      setSurfaceHeights(heights);
+      ptMat.opacity = 0;
+      lblReact.visible = true; lblProd.visible = true;
+      pathLine.visible = true;
+
+      const shown = Math.max(2, Math.floor(PATH_N * t));
+      for (let k = 0; k < shown; k++) {
+        pathPos[k*3]   = worldX(PATH[k][0]);
+        pathPos[k*3+1] = worldY(PATH[k][2]) + 0.03;
+        pathPos[k*3+2] = worldZ(PATH[k][1]);
+      }
+      pathGeo.attributes.position.needsUpdate = true;
+      pathGeo.setDrawRange(0, shown);
+      const last = PATH[shown - 1];
+      head.visible = true;
+      head.position.set(worldX(last[0]), worldY(last[2]) + 0.03, worldZ(last[1]));
+    }
+  }
+  function tick(now) {
+    requestAnimationFrame(tick);
+
+    if (!playing) {
+      renderer.render(scene, camera);
+      return;
+    }
+
+    if (holdUntil !== null) {
+      if (now >= holdUntil) {
+        holdUntil = null;
+        stage = 0;
+        currentFrac = 0;
+        stageStart = now;
+        renderStage(0, 0);
+      }
+      renderer.render(scene, camera);
+      return;
+    }
+
+    const elapsed = now - stageStart;
+    let frac = elapsed / STAGE_DUR[stage];
+    if (frac >= 1) {
+      if (stage < 3) {
+        stage += 1;
+        stageStart = now;
+        frac = 0;
+      } else {
+        frac = 1;
+        holdUntil = now + HOLD_MS;
+      }
+    }
+    currentFrac = frac;
+    renderStage(stage, frac);
+    renderer.render(scene, camera);
+  }
+
+  // First paint before animation loop takes over
+  renderStage(0, 1);
+  renderer.render(scene, camera);
+  setPlayIcon();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
