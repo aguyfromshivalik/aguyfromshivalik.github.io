@@ -1,0 +1,50 @@
+{% if site.data.journal_covers and site.data.journal_covers.size > 0 %}
+  <div class="journal-cover-strip" aria-label="Journal issue covers">
+    <button type="button" class="journal-cover-nav journal-cover-prev" aria-label="Scroll covers left">‹</button>
+    <div class="journal-cover-track" tabindex="0">
+      {% for cover in site.data.journal_covers %}
+        {% assign cover_path = cover.image | prepend: '/assets/img/journal_covers/' %}
+        <a
+          class="journal-cover-item"
+          href="{{ cover.url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="{{ cover.journal }} {{ cover.volume }}{% if cover.issue %}/{{ cover.issue }}{% endif %} ({{ cover.year }})"
+        >
+          <img
+            class="journal-cover-img"
+            src="{{ cover_path | relative_url }}"
+            alt="{{ cover.journal }} cover, Vol. {{ cover.volume }}{% if cover.issue %}/{{ cover.issue }}{% endif %}"
+            loading="lazy"
+            width="90"
+            height="120"
+          >
+          <span class="journal-cover-caption">
+            {{ cover.journal }}
+            <span class="journal-cover-meta">{{ cover.year }} · Vol.&nbsp;{{ cover.volume }}{% if cover.issue %},&nbsp;{{ cover.issue }}{% endif %}</span>
+          </span>
+        </a>
+      {% endfor %}
+    </div>
+    <button type="button" class="journal-cover-nav journal-cover-next" aria-label="Scroll covers right">›</button>
+  </div>
+  <script>
+    (function () {
+      var strip = document.currentScript.previousElementSibling;
+      if (!strip || !strip.classList.contains('journal-cover-strip')) return;
+      var track = strip.querySelector('.journal-cover-track');
+      var prev = strip.querySelector('.journal-cover-prev');
+      var next = strip.querySelector('.journal-cover-next');
+      if (!track || !prev || !next) return;
+      var step = function () {
+        return Math.max(160, Math.floor(track.clientWidth * 0.7));
+      };
+      prev.addEventListener('click', function () {
+        track.scrollBy({ left: -step(), behavior: 'smooth' });
+      });
+      next.addEventListener('click', function () {
+        track.scrollBy({ left: step(), behavior: 'smooth' });
+      });
+    })();
+  </script>
+{% endif %}

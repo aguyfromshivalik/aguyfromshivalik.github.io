@@ -51,3 +51,9 @@ To disable a social icon, comment out its corresponding entry:
 
 No changes to `_pages/about.md` are required when simply enabling or disabling a supported social platform.
 
+## Memories (photos)
+
+How to add photos or new place strips (HCU, UniPD, …): see **[how-to-update/memories.md](how-to-update/memories.md)**.
+
+That folder is for local/repo notes only — it is excluded from the built website (same idea as this README).
+

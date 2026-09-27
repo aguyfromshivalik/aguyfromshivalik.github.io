@@ -2,93 +2,81 @@
 layout: page
 permalink: /research/
 title: Research
-description: # News
+description: Reaction dynamics, potential energy surfaces, and a bit of machine learning.
 nav: true
 nav_order: 2
 ---
 
-<p style="text-align:justify;">
-  Collision between the two chemical species is the necessary condition for the reactions.
-  Any collision event can result into elastic, inelastic, and reactive outcomes. In the case
-  of first two (elastic and inelastic) events, the reactants don't change their chemical form,
-  whereas in the third, reactants transform to different chemical species. My PhD research
-  was focused on the
-  <u>theoretical study of reactive collision between atom and diatom pair</u>.
-  This requires solving either the classical or quantum equations of motion for the
-  reaction system. <br>
+<div class="research-page">
 
-  However, computationally, it is not an easy task and requires accurate and instantaneous
-  calculation of potential energes (or forces) of the chemical system at different spatial
-  configurations in time. This generates a need to find an analytical equation of potential
-  as a function of spatial configuration of the system, a process which is termed as
-  construction of potential energy surface (PES). This is an important and still evolving
-  field of research. <u>Construction of PES</u> using machine learning and non-machine
-  learning methods was also explored during my PhD work.
+<p class="research-lead">
+  Chemical reactions begin with a collision. Most collisions bounce or reshuffle energy;
+  a few remake the molecules. I study that last case&mdash;how atoms and small molecules
+  rearrange on a potential energy surface&mdash;with classical trajectories, quantum
+  wave packets, and tools that make those surfaces easier to build and explore.
 </p>
 
+<h2>From surface to dynamics</h2>
 
-<!-- =========================================================
-     INTERACTIVE POTENTIAL ENERGY SURFACE
-     ========================================================= -->
+<p>
+  To follow a reaction, you need the potential energy of the system at every geometry
+  the atoms visit. Fitting that landscape into a usable potential energy surface (PES)
+  is the bottleneck; running the dynamics on it is the payoff. My PhD work at the
+  University of Hyderabad centered on atom&ndash;diatom reactions
+  (systems such as H&nbsp;+&nbsp;LiH<sup>+</sup> and He&nbsp;+&nbsp;LiH<sup>+</sup>):
+  constructing PESs, then computing state-to-state cross sections and rates with
+  time-dependent quantum mechanics and quasi-classical trajectories.
+</p>
 
-<div class="pes-interactive-container">
+<p>
+  That line of work also asked finer questions&mdash;how reagent vibration and rotation
+  steer the outcome, when quantum interference shows up in the mechanism, and how
+  isotopic substitution changes the picture.
+</p>
 
-  <iframe
-    src="{{ '/assets/html/pes_interactive.html' | relative_url }}"
-    title="Interactive 3D Potential Energy Surface construction to dynamics"
-    loading="lazy">
-  </iframe>
-
+<div class="pes-interactive-block">
+  <p class="pes-interactive-caption">
+    Interactive sketch of the pipeline: build a surface, then watch reactive motion on it.
+  </p>
+  <div class="pes-interactive-container">
+    <iframe
+      src="{{ '/assets/html/pes_interactive.html' | relative_url }}"
+      title="Interactive 3D potential energy surface: from construction to dynamics"
+      loading="lazy"
+    ></iframe>
+  </div>
 </div>
 
+<h2>What I focus on</h2>
 
-<!-- =========================================================
-     STYLES FOR INTERACTIVE PES
-     ========================================================= -->
+<ul class="research-themes">
+  <li>
+    <strong>Potential energy surfaces</strong> &mdash;
+    analytical and data-driven representations that are accurate enough for dynamics
+    and fast enough to evaluate on the fly.
+  </li>
+  <li>
+    <strong>State-to-state reaction dynamics</strong> &mdash;
+    quantum and classical treatments of small reactive systems, with an eye on
+    energy disposal, product distributions, and mechanism.
+  </li>
+  <li>
+    <strong>Tools and ML in chemistry</strong> &mdash;
+    software such as
+    <a href="https://doi.org/10.1002/jcc.70397">PES-trotter</a>
+    for exploring 3D landscapes, and broader interest in where machine learning
+    helps (and where it should stay out of the way).
+  </li>
+</ul>
 
-<style>
+<h2>Now</h2>
 
-  .pes-interactive-container {
-    width: 100%;
-    margin: 1.8em 0 2.2em 0;
-    overflow: hidden;
-    border-radius: 14px;
-  }
+<p>
+  At the University of Padova I work with
+  <a href="https://sites.google.com/view/sergio-rampino/home">Dr.&nbsp;Sergio Rampino</a>
+  on reaction dynamics and on making PES analysis more interactive and portable.
+  Details and papers live on the
+  <a href="{{ '/publications/' | relative_url }}">Publications</a> page.
+</p>
 
-  .pes-interactive-container iframe {
-    display: block;
-    width: 100%;
-    height: 650px;
-    border: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-
-
-  /* Tablet */
-  @media (max-width: 900px) {
-
-    .pes-interactive-container iframe {
-      height: 620px;
-    }
-
-  }
-
-
-  /* Mobile */
-  @media (max-width: 600px) {
-
-    .pes-interactive-container {
-      margin-top: 1.2em;
-      margin-bottom: 1.8em;
-      border-radius: 10px;
-    }
-
-    .pes-interactive-container iframe {
-      height: 560px;
-    }
-
-  }
-
-</style>
+</div>
