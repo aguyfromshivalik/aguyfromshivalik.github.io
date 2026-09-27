@@ -13,6 +13,8 @@
     --copper:#b5541c;
     --gold:#d1a13a;
     --line: rgba(27,36,48,0.10);
+    --bar-track: rgba(27,36,48,0.08);
+    --bar-fill: #a9d8d0;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -20,6 +22,8 @@
       --ink:#eef0ea;
       --muted:#8b9199;
       --line: rgba(255,255,255,0.10);
+      --bar-track: rgba(255,255,255,0.08);
+      --bar-fill: rgba(20,184,166,0.38);
     }
   }
   :root[data-theme="dark"]{
@@ -27,6 +31,8 @@
     --ink:#eef0ea;
     --muted:#8b9199;
     --line: rgba(255,255,255,0.10);
+    --bar-track: rgba(255,255,255,0.08);
+    --bar-fill: rgba(20,184,166,0.38);
   }
   *{box-sizing:border-box;}
   html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;}
@@ -45,40 +51,48 @@
     padding:0.55rem 0.9rem 0.65rem;
     height:100%;
     overflow:hidden;
+    display:flex;
+    flex-direction:column;
   }
   .pes-intro{
     display:flex;
     justify-content:space-between;
     align-items:flex-end;
     gap:1.5rem;
-    margin-bottom:0.45rem;
+    margin-bottom:0.85rem;
     flex-wrap:wrap;
+    flex-shrink:0;
   }
   .pes-intro p{
     margin:0;
     max-width:52ch;
-    font-size:0.91rem;
+    font-size:1.12rem;
+    font-weight:600;
     line-height:1.35;
     color:var(--ink);
   }
   .pes-intro .hint{
     margin:0;
     font-size:0.76rem;
+    font-weight:400;
     color:var(--muted);
     white-space:nowrap;
   }
   .pes-stage{
     display:block;
-    font-size:0.98rem;
+    margin:0.35rem 0 0;
+    font-size:0.86rem;
     font-style:italic;
     color:var(--muted);
-    min-height:1.4em;
+    min-height:1.35em;
+    line-height:1.35;
+    flex-shrink:0;
   }
   .pes-canvas-frame{
     position:relative;
     width:100%;
-    aspect-ratio:16/9;
-    max-height:calc(100vh - 118px);
+    flex:1 1 auto;
+    min-height:0;
     border-radius:14px;
     overflow:hidden;
     background:
@@ -97,6 +111,7 @@
     align-items:center;
     gap:0.9rem;
     margin-top:0.45rem;
+    flex-shrink:0;
   }
   .pes-play{
     flex:0 0 auto;
@@ -110,6 +125,58 @@
   }
   .pes-play:hover{ border-color:var(--copper); color:var(--copper); }
   .pes-play svg{ width:14px; height:14px; }
+
+  .pes-speed{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:0.4rem;
+    min-width:0;
+  }
+  .pes-speed label{
+    font-size:0.68rem;
+    color:var(--muted);
+    white-space:nowrap;
+    user-select:none;
+  }
+  .pes-speed input[type="range"]{
+    -webkit-appearance:none;
+    appearance:none;
+    width:78px;
+    height:4px;
+    border-radius:999px;
+    background:var(--bar-track);
+    outline:none;
+    cursor:pointer;
+  }
+  .pes-speed input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:14px; height:14px;
+    border-radius:50%;
+    background:var(--ink);
+    border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--line);
+    cursor:pointer;
+  }
+  .pes-speed input[type="range"]::-moz-range-thumb{
+    width:14px; height:14px;
+    border-radius:50%;
+    background:var(--ink);
+    border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--line);
+    cursor:pointer;
+  }
+  .pes-speed #pesSpeedVal{
+    font-size:0.68rem;
+    color:var(--ink);
+    font-variant-numeric:tabular-nums;
+    font-feature-settings:"tnum";
+    width:3.4em;
+    flex:0 0 3.4em;
+    text-align:right;
+    white-space:nowrap;
+  }
 
   .pes-stepper{
     flex:1 1 auto;
@@ -131,6 +198,7 @@
     margin-top:0.15rem;
     font-size:0.68rem;
     color:var(--muted);
+    flex-shrink:0;
   }
   .pes-foot a{ color:inherit; }
 
@@ -145,19 +213,49 @@
     .pes-intro .hint{ display:none; }
     .pes-node text{ display:none; }
     .pes-mobile-stage{ display:inline-block; }
+    .pes-speed label{ display:none; }
+    .pes-speed input[type="range"]{ width:64px; }
   }
   @media (max-width:700px){
     .pes-wrap{padding:0.35rem 0.5rem 0.45rem;}
     .pes-intro .hint{display:none;}
-    .pes-intro p{font-size:0.84rem;}
-    .pes-canvas-frame{
-      aspect-ratio:4/3;
-      max-height:calc(100vh - 112px);
-    }
+    .pes-intro p{font-size:1.02rem;}
   }
 
   @media (prefers-reduced-motion: reduce){
     .pes-canvas-frame{ scroll-behavior:auto; }
+  }
+
+  /* Crisp DOM labels projected from 3D (avoids soft CanvasTexture sprites). */
+  .pes-label-layer{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:2;
+  }
+  .pes-3d-label{
+    position:absolute;
+    left:0; top:0;
+    white-space:nowrap;
+    font-family:"Space Grotesk","IBM Plex Sans",system-ui,sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:0.01em;
+    color:var(--ink);
+    /* Hard halo only — soft glow made the labels look blurry. */
+    text-shadow:
+      -1px 0 0 var(--paper),
+      1px 0 0 var(--paper),
+      0 -1px 0 var(--paper),
+      0 1px 0 var(--paper);
+    will-change:transform;
+    opacity:0;
+  }
+  .pes-3d-label.muted{
+    font-weight:500;
+    font-size:12px;
+    color:var(--muted);
   }
 </style>
 </head>
@@ -165,11 +263,13 @@
 
 <div class="pes-wrap">
   <div class="pes-intro">
-    <p>A potential energy surface, built the way we actually build one: sample configurations, compute their energies, fit a surface through them, then run dynamics on top of it. <span class="pes-stage" id="pesStageCaption"></span></p>
+    <p>From potential energy surface to reaction dynamics</p>
     <p class="hint">drag to rotate · scroll to zoom</p>
   </div>
 
-  <div class="pes-canvas-frame" id="pesFrame"></div>
+  <div class="pes-canvas-frame" id="pesFrame">
+    <div class="pes-label-layer" id="pesLabelLayer" aria-hidden="true"></div>
+  </div>
 
   <div class="pes-controls">
     <button class="pes-play" id="pesPlay" aria-label="Play">
@@ -177,10 +277,14 @@
     </button>
     <div class="pes-stepper"><svg id="pesStepperSvg"></svg></div>
     <span class="pes-mobile-stage" id="pesMobileStage"></span>
+    <div class="pes-speed" title="Animation speed">
+      <label for="pesSpeed">Speed</label>
+      <input type="range" id="pesSpeed" min="0.25" max="2.5" step="0.05" value="1" aria-label="Animation speed">
+      <span id="pesSpeedVal">1.0×</span>
+    </div>
   </div>
 
-  <!-- <p class="pes-foot">Rendered live in your browser with Three.js — nothing here is a video.</p>
-  --->
+  <p class="pes-stage" id="pesStageCaption" aria-live="polite"></p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -197,12 +301,12 @@
   };
   const STAGE_NAMES = ["Sampling configurations", "Ab initio energies", "Fitting the PES", "Reaction dynamics"];
   const STAGE_CAPTIONS = [
-    "Scattering configurations across the (R\u2081, R\u2082) landscape.",
-    "Each configuration gets its true energy, computed point by point.",
-    "A smooth surface is fit through the scattered energies.",
-    "A trajectory crosses the surface, reactants to products."
+    "Sampling configurations across the molecular space",
+    "Calculating ab-initio energy for each geometry using state-of-art electronic structure methods",
+    "A surface is fit through the energies and refined until it matches them",
+    "A trajectory moving across the surface, reactants to products"
   ];
-  const STAGE_DUR = [2600, 2600, 3600, 5200]; // ms, one full pass
+  const STAGE_DUR = [2600, 2600, 7000, 5200]; // ms, one full pass
   const HOLD_MS = 1400; // pause on the finished trajectory before looping
 
   // ---------------------------------------------------------------
@@ -233,27 +337,6 @@
       if (v > zmax) zmax = v;
     }
   }
-  function boxBlur(src, passes) {
-    let a = src.slice();
-    for (let p = 0; p < passes; p++) {
-      const b = new Float32Array(N * N);
-      for (let i = 0; i < N; i++) {
-        for (let j = 0; j < N; j++) {
-          let sum = 0, cnt = 0;
-          for (let di = -1; di <= 1; di++) {
-            for (let dj = -1; dj <= 1; dj++) {
-              const ii = i + di, jj = j + dj;
-              if (ii >= 0 && ii < N && jj >= 0 && jj < N) { sum += a[ii * N + jj]; cnt++; }
-            }
-          }
-          b[i * N + j] = sum / cnt;
-        }
-      }
-      a = b;
-    }
-    return a;
-  }
-  const heightsBlur = boxBlur(heights, 12);
 
   const floorY = 0.0;
   // A square footprint with near-full-height relief makes this look like a
@@ -319,6 +402,99 @@
   for (let k = 0; k < NP; k++) lagOf[order[k]] = (k / NP) * 0.55;
 
   // ---------------------------------------------------------------
+  // Progressive fit: a sequence of Gaussian RBF fits that use more and more
+  // of the ab initio points, so the surface visibly improves step by step.
+  // Level 0 is a flat plane at the mean energy; the last level is the
+  // converged surface that the dynamics stage runs on.
+  // ---------------------------------------------------------------
+  // farthest-point ordering, so every fit level covers the whole landscape
+  const fitRank = new Int32Array(NP);
+  const fitOrder = [0];
+  {
+    const dmin = new Float32Array(NP).fill(Infinity);
+    for (let r = 1; r < NP; r++) {
+      const last = fitOrder[r - 1];
+      let best = -1, bestD = -1;
+      for (let k = 0; k < NP; k++) {
+        const d = (PX[k] - PX[last]) ** 2 + (PY[k] - PY[last]) ** 2;
+        if (d < dmin[k]) dmin[k] = d;
+        if (dmin[k] > bestD && !fitOrder.includes(k)) { bestD = dmin[k]; best = k; }
+      }
+      fitOrder.push(best);
+    }
+    fitOrder.forEach((k, r) => { fitRank[k] = r; });
+  }
+
+  function rbfFit(n) {
+    const idx = fitOrder.slice(0, n);
+    const eps = Math.max(0.17, 0.45 / Math.sqrt(n / 6));   // wide early, narrower as points are added
+    const e2 = eps * eps;
+    let mean = 0;
+    for (const k of idx) mean += PZ[k];
+    mean /= n;
+    // (Phi + lambda I) w = z - mean, solved by Cholesky
+    const A = new Float64Array(n * n), w = new Float64Array(n);
+    for (let a = 0; a < n; a++) {
+      w[a] = PZ[idx[a]] - mean;
+      for (let b = 0; b <= a; b++) {
+        const d2 = (PX[idx[a]] - PX[idx[b]]) ** 2 + (PY[idx[a]] - PY[idx[b]]) ** 2;
+        A[a * n + b] = A[b * n + a] = Math.exp(-d2 / e2);
+      }
+      A[a * n + a] += 1e-5;
+    }
+    for (let j = 0; j < n; j++) {
+      let s = A[j * n + j];
+      for (let k = 0; k < j; k++) s -= A[j * n + k] ** 2;
+      const d = Math.sqrt(Math.max(s, 1e-12));
+      A[j * n + j] = d;
+      for (let i = j + 1; i < n; i++) {
+        let t = A[i * n + j];
+        for (let k = 0; k < j; k++) t -= A[i * n + k] * A[j * n + k];
+        A[i * n + j] = t / d;
+      }
+    }
+    for (let i = 0; i < n; i++) { let t = w[i]; for (let k = 0; k < i; k++) t -= A[i * n + k] * w[k]; w[i] = t / A[i * n + i]; }
+    for (let i = n - 1; i >= 0; i--) { let t = w[i]; for (let k = i + 1; k < n; k++) t -= A[k * n + i] * w[k]; w[i] = t / A[i * n + i]; }
+    // evaluate on the grid (the Gaussian is separable in x and y)
+    const out = new Float32Array(N * N).fill(mean);
+    const ex = new Float32Array(N), ey = new Float32Array(N);
+    for (let a = 0; a < n; a++) {
+      const kx = PX[idx[a]], ky = PY[idx[a]];
+      for (let i = 0; i < N; i++) {
+        ex[i] = Math.exp(-((i / (N - 1) - kx) ** 2) / e2);
+        ey[i] = Math.exp(-((i / (N - 1) - ky) ** 2) / e2);
+      }
+      for (let i = 0; i < N; i++) {
+        const wi = w[a] * ex[i];
+        if (Math.abs(wi) < 1e-7) continue;
+        for (let j = 0; j < N; j++) out[i * N + j] += wi * ey[j];
+      }
+    }
+    return out;
+  }
+
+  const FIT_COUNTS = [6, 10, 16, 24, 36, 52, 72, 96, 120, NP];
+  const FIT_LEVELS = [];
+  const FIT_NUSED = [0];
+  {
+    let meanAll = 0;
+    for (let k = 0; k < NP; k++) meanAll += PZ[k];
+    FIT_LEVELS.push(new Float32Array(N * N).fill(meanAll / NP));
+    for (const n of FIT_COUNTS) { FIT_LEVELS.push(rbfFit(n)); FIT_NUSED.push(n); }
+    FIT_LEVELS.push(heights);            // converged surface
+    FIT_NUSED.push(NP);
+  }
+  const FIT_STEPS = FIT_LEVELS.length - 1;
+
+  function sampleGrid(arr, x, y) {       // bilinear lookup, x/y in [0,1]
+    const fx = Math.min(N - 1.001, Math.max(0, x * (N - 1)));
+    const fy = Math.min(N - 1.001, Math.max(0, y * (N - 1)));
+    const i = Math.floor(fx), j = Math.floor(fy), u = fx - i, v = fy - j;
+    return (1 - u) * (1 - v) * arr[i * N + j] + u * (1 - v) * arr[(i + 1) * N + j]
+         + (1 - u) * v * arr[i * N + j + 1] + u * v * arr[(i + 1) * N + j + 1];
+  }
+
+  // ---------------------------------------------------------------
   // Trajectory (Catmull-Rom through the same reactant->product route)
   // ---------------------------------------------------------------
   const WAY = [
@@ -381,7 +557,7 @@
   surfGeo.setAttribute("color", new THREE.BufferAttribute(surfColor, 3));
   const surfMat = new THREE.MeshStandardMaterial({
     vertexColors: true, roughness: 0.85, metalness: 0.0,
-    side: THREE.DoubleSide, wireframe: false
+    side: THREE.DoubleSide, wireframe: false, transparent: true, opacity: 1
   });
   const surfMesh = new THREE.Mesh(surfGeo, surfMat);
   scene.add(surfMesh);
@@ -502,40 +678,56 @@
   scene.add(head);
   head.visible = false;
 
-  // --- text sprites (axis + reactant/product labels) ---
-  function makeLabel(text, color, fontPx) {
-    const cnv = document.createElement("canvas");
-    const ctx = cnv.getContext("2d");
-    const scale = 4;
-    ctx.font = `${fontPx * scale}px "Space Grotesk", sans-serif`;
-    const w = Math.ceil(ctx.measureText(text).width) + 24 * scale;
-    cnv.width = w; cnv.height = fontPx * scale * 1.6;
-    ctx.font = `${fontPx * scale}px "Space Grotesk", sans-serif`;
-    ctx.fillStyle = color;
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, 12 * scale, cnv.height / 2);
-    const tex = new THREE.CanvasTexture(cnv);
-    tex.needsUpdate = true;
-    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false });
-    const spr = new THREE.Sprite(mat);
-    spr.renderOrder = 999;
-    const aspect = cnv.width / cnv.height;
-    const h = 0.42;
-    spr.scale.set(h * aspect, h, 1);
-    return spr;
+  // --- crisp HTML labels projected from 3D (axis + reactant/product) ---
+  const labelLayer = document.getElementById("pesLabelLayer");
+  const _proj = new THREE.Vector3();
+  function makeLabel(text, muted) {
+    const el = document.createElement("div");
+    el.className = "pes-3d-label" + (muted ? " muted" : "");
+    el.textContent = text;
+    labelLayer.appendChild(el);
+    return {
+      el,
+      position: new THREE.Vector3(),
+      visible: true,
+      set(x, y, z) { this.position.set(x, y, z); return this; }
+    };
   }
-  const inkCss = "#1b2430";
-  const mutedCss = "#83887f";
-  const axR1 = makeLabel("R\u2081", mutedCss, 30); axR1.position.set(worldX(1.02), 0.05, worldZ(-0.04)); scene.add(axR1);
-  const axR2 = makeLabel("R\u2082", mutedCss, 30); axR2.position.set(worldX(-0.04), 0.05, worldZ(1.02)); scene.add(axR2);
-  const axE  = makeLabel("E", mutedCss, 30); axE.position.set(worldX(-0.06), HSCALE * 0.55, worldZ(-0.06)); scene.add(axE);
+  function syncLabels() {
+    const w = frame.clientWidth, h = frame.clientHeight;
+    for (let i = 0; i < htmlLabels.length; i++) {
+      const lbl = htmlLabels[i];
+      if (!lbl.visible) {
+        lbl.el.style.opacity = "0";
+        continue;
+      }
+      _proj.copy(lbl.position).project(camera);
+      const onScreen = _proj.z > -1 && _proj.z < 1
+        && _proj.x >= -1.2 && _proj.x <= 1.2
+        && _proj.y >= -1.2 && _proj.y <= 1.2;
+      if (!onScreen) {
+        lbl.el.style.opacity = "0";
+        continue;
+      }
+      const x = (_proj.x * 0.5 + 0.5) * w;
+      const y = (-_proj.y * 0.5 + 0.5) * h;
+      lbl.el.style.transform = "translate(-50%, -50%) translate(" + x + "px," + y + "px)";
+      lbl.el.style.opacity = "1";
+    }
+  }
+  function paint() {
+    renderer.render(scene, camera);
+    syncLabels();
+  }
 
-  const lblReact = makeLabel("Reactants", inkCss, 30);
-  lblReact.position.set(worldX(0.17), worldY(V(0.17,0.40)) + 1.1, worldZ(0.40));
-  const lblProd = makeLabel("Products", inkCss, 30);
-  lblProd.position.set(worldX(0.83), worldY(V(0.83,0.64)) + 1.1, worldZ(0.64));
-  lblReact.visible = false; lblProd.visible = false;
-  scene.add(lblReact); scene.add(lblProd);
+  const axR1 = makeLabel("R\u2081", true).set(worldX(1.02), 0.05, worldZ(-0.04));
+  const axR2 = makeLabel("R\u2082", true).set(worldX(-0.04), 0.05, worldZ(1.02));
+  const axE  = makeLabel("E", true).set(worldX(-0.06), HSCALE * 0.55, worldZ(-0.06));
+  const lblReact = makeLabel("Reactants", false).set(worldX(0.17), worldY(V(0.17,0.40)) + 1.1, worldZ(0.40));
+  const lblProd = makeLabel("Products", false).set(worldX(0.83), worldY(V(0.83,0.64)) + 1.1, worldZ(0.64));
+  lblReact.visible = false;
+  lblProd.visible = false;
+  const htmlLabels = [axR1, axR2, axE, lblReact, lblProd];
 
   // ---------------------------------------------------------------
   // Resize
@@ -574,57 +766,68 @@
   }, { passive: false });
 
   // ---------------------------------------------------------------
-  // Stepper UI (SVG contour-line with 4 nodes)
+  // Stepper UI: a light progress bar that fills continuously, with the
+  // four stages as dark milestone dots. Dot i sits where stage i begins;
+  // the bar's right end is the end of the dynamics stage.
   // ---------------------------------------------------------------
   const stepperSvg = document.getElementById("pesStepperSvg");
   const stageCaption = document.getElementById("pesStageCaption");
   const mobileStage = document.getElementById("pesMobileStage");
-  let stageNodes = [];
+  const bar = { x0: 0, seg: 0, fill: null, len: 0, progress: 0 };
   function buildStepper() {
     const w = document.querySelector(".pes-stepper").clientWidth || 600;
     const h = 34;
     const y = h / 2 + 4;
-    const xs = [0.06, 0.36, 0.66, 0.94].map(f => f * w);
-    let path = `M ${xs[0]} ${y}`;
-    for (let i = 1; i < xs.length; i++) {
-      const midx = (xs[i-1] + xs[i]) / 2;
-      path += ` Q ${midx} ${y - 9} ${xs[i]} ${y}`;
+    bar.x0 = 0.03 * w;
+    bar.seg = (0.97 * w - bar.x0) / 4;
+    const xs = [0, 1, 2, 3].map(i => bar.x0 + i * bar.seg);
+    const xEnd = bar.x0 + 4 * bar.seg;
+    // each label reads along its own segment; short names when segments are narrow
+    const labels = bar.seg < 160 ? ["Sampling", "Ab initio", "Fitting", "Dynamics"] : STAGE_NAMES;
+    // gentle arcs between milestones, the same shape for every segment
+    let path = `M ${bar.x0} ${y}`;
+    for (let i = 1; i <= 4; i++) {
+      const xa = bar.x0 + (i - 1) * bar.seg, xb = bar.x0 + i * bar.seg;
+      path += ` Q ${(xa + xb) / 2} ${y - 9} ${xb} ${y}`;
     }
-    let svg = `<path d="${path}" fill="none" stroke="var(--line)" stroke-width="1.5"/>`;
-    stageNodes = [];
+    let svg = `<path d="${path}" fill="none" stroke="var(--bar-track)" stroke-width="6" stroke-linecap="round"/>
+      <path id="pesBarFill" d="${path}" fill="none" stroke="var(--bar-fill)" stroke-width="6" stroke-linecap="round"/>`;
     xs.forEach((x, i) => {
       svg += `<g class="pes-node" data-i="${i}">
-        <circle cx="${x}" cy="${y}" r="5" fill="var(--paper)" stroke="var(--muted)" stroke-width="1.6" data-role="dot"/>
-        <text x="${x}" y="${y - 13}" text-anchor="${i===0?"start":(i===xs.length-1?"end":"middle")}">${STAGE_NAMES[i]}</text>
+        <circle cx="${x}" cy="${y}" r="11" fill="transparent" data-role="hit"/>
+        <circle cx="${x}" cy="${y}" r="9" fill="none" stroke="var(--ink)" stroke-width="1.4" opacity="0" data-role="halo"/>
+        <circle cx="${x}" cy="${y}" r="5" fill="var(--ink)" stroke="var(--paper)" stroke-width="2" data-role="dot"/>
+        <text x="${x - 4}" y="${y - 13}" text-anchor="start">${labels[i]}</text>
       </g>`;
     });
     stepperSvg.innerHTML = svg;
+    bar.fill = stepperSvg.querySelector("#pesBarFill");
+    bar.len = bar.fill.getTotalLength();
+    bar.fill.setAttribute("stroke-dasharray", `${bar.len} ${bar.len}`);
     stepperSvg.querySelectorAll(".pes-node").forEach((g) => {
       g.addEventListener("click", () => jumpTo(parseInt(g.dataset.i, 10)));
     });
+    setBar(bar.progress);
+    paintStepper(stage);
   }
-  function paintStepper(stage, frac) {
+  // progress runs 0..4: stage index plus the fraction of that stage done
+  function setBar(progress) {
+    bar.progress = Math.min(4, Math.max(0, progress));
+    if (!bar.fill) return;
+    // segments are identical arcs, so arc length is proportional to progress
+    bar.fill.setAttribute("stroke-dashoffset", bar.len * (1 - bar.progress / 4));
+    bar.fill.style.visibility = bar.progress < 0.002 ? "hidden" : "visible";
+  }
+  function paintStepper(stage) {
     stepperSvg.querySelectorAll(".pes-node").forEach((g) => {
       const i = parseInt(g.dataset.i, 10);
-      const dot = g.querySelector("circle");
       g.classList.remove("active", "done");
-      if (i < stage) {
-        g.classList.add("done");
-        dot.setAttribute("fill", "var(--teal)");
-        dot.setAttribute("stroke", "var(--teal)");
-      } else if (i === stage) {
-        g.classList.add("active");
-        dot.setAttribute("fill", "var(--copper)");
-        dot.setAttribute("stroke", "var(--copper)");
-      } else {
-        dot.setAttribute("fill", "var(--paper)");
-        dot.setAttribute("stroke", "var(--muted)");
-      }
+      if (i < stage) g.classList.add("done");
+      else if (i === stage) g.classList.add("active");
+      g.querySelector('[data-role="dot"]').setAttribute("r", i === stage ? 6.5 : 5);
+      g.querySelector('[data-role="halo"]').setAttribute("opacity", i === stage ? 0.35 : 0);
     });
   }
-  buildStepper();
-  window.addEventListener("resize", buildStepper);
-
   // ---------------------------------------------------------------
   // Animation state machine
   // ---------------------------------------------------------------
@@ -632,6 +835,30 @@
   let stageStart = performance.now();
   let playing = false;
   let holdUntil = null;
+  let speed = 1;
+
+  function stageDur(s) { return STAGE_DUR[s] / speed; }
+  function holdDur() { return HOLD_MS / speed; }
+
+  const speedInput = document.getElementById("pesSpeed");
+  const speedVal = document.getElementById("pesSpeedVal");
+  function setSpeed(v, fromInput) {
+    const next = Math.min(2.5, Math.max(0.25, Number(v) || 1));
+    // Keep the current frame when the rate changes.
+    if (playing && holdUntil === null && next !== speed) {
+      stageStart = performance.now() - currentFrac * (STAGE_DUR[stage] / next);
+    }
+    speed = next;
+    speedVal.textContent = speed.toFixed(2) + "\u00d7";
+    // Never rewrite the range value during drag — that makes the thumb jump.
+    if (!fromInput && speedInput.valueAsNumber !== speed) {
+      speedInput.value = String(speed);
+    }
+  }
+  speedInput.addEventListener("input", () => setSpeed(speedInput.value, true));
+  // Keep wheel on the slider from also zooming the 3D view underneath.
+  speedInput.addEventListener("wheel", (e) => e.stopPropagation(), { passive: true });
+  setSpeed(speedInput.value, false);
 
   const playBtn = document.getElementById("pesPlay");
   const playIcon = document.getElementById("pesPlayIcon");
@@ -642,31 +869,37 @@
   }
   playBtn.addEventListener("click", () => {
     playing = !playing;
-    if (playing) { stageStart = performance.now() - currentFrac * STAGE_DUR[stage]; holdUntil = null; }
+    if (playing) { stageStart = performance.now() - currentFrac * stageDur(stage); holdUntil = null; }
     setPlayIcon();
   });
 
   function jumpTo(i) {
     stage = i;
-    currentFrac = 1;
-    stageStart = performance.now() - STAGE_DUR[stage];
-    playing = false;
+    currentFrac = 0;
+    stageStart = performance.now();
+    playing = true;
     holdUntil = null;
     setPlayIcon();
-    renderStage(stage, 1);
+    renderStage(stage, 0);
+    setBar(stage);
   }
 
   let currentFrac = 0;
+  buildStepper();
+  window.addEventListener("resize", buildStepper);
 
   function renderStage(s, t) {
     stageCaption.textContent = STAGE_CAPTIONS[s];
     mobileStage.textContent = STAGE_NAMES[s];
-    paintStepper(s, t);
+    paintStepper(s);
     lblReact.visible = false; lblProd.visible = false;
     head.visible = false;
     pathLine.visible = false;
     floorMesh.material.opacity = 0.22;
     energySticks.visible = false;
+    energyStickMat.opacity = 0.9;
+    surfMat.opacity = 1;
+    wireMat.opacity = 0.06;
 
     if (s === 0) {
       // Sampling: points appear on the floor, staggered by shuffled order.
@@ -709,15 +942,50 @@
       wireMesh.visible = false;
 
     } else if (s === 2) {
-      // Fit PES: surface morphs from heavily blurred to the true fitted surface
+      // Fit PES: a flat plane fades in, then steps through fits that use more
+      // and more points; residual lines from each point to the surface shrink.
       surfMesh.visible = true; wireMesh.visible = true;
-      const k = smoothstep(t / 0.9);
+      const fadeIn = smoothstep(t / 0.07);
+      surfMat.opacity = fadeIn;
+      wireMat.opacity = 0.06 * fadeIn;
+      const p = FIT_STEPS * Math.min(1, Math.max(0, (t - 0.05) / 0.83));   // fit progress in levels
+      const lv = Math.min(FIT_STEPS - 1, Math.floor(p));
+      const f = smoothstep(p - lv);                                     // each refinement settles in
+      const A = FIT_LEVELS[lv], B = FIT_LEVELS[lv + 1];
       const blended = new Float32Array(N * N);
-      for (let idx = 0; idx < N * N; idx++) blended[idx] = lerp(heightsBlur[idx], heights[idx], k);
+      let se = 0;
+      for (let idx = 0; idx < N * N; idx++) {
+        blended[idx] = lerp(A[idx], B[idx], f);
+        se += (blended[idx] - heights[idx]) ** 2;
+      }
       setSurfaceHeights(blended);
-      const px = PX, py = PY, pz = PZ;
-      const op = 1 - 0.85 * smoothstep((t - 0.55) / 0.45);
-      setPoints(px, py, pz, op);
+      // const rmse = Math.sqrt(se / (N * N));
+      const nUsed = Math.round(lerp(FIT_NUSED[lv], FIT_NUSED[lv + 1], f));
+      // stageCaption.textContent = t >= 0.88
+      //   ? `${STAGE_CAPTIONS[2]} Converged: ${NP} points, RMSE ${rmse.toFixed(3)}.`
+      //   : `Fit ${Math.min(FIT_STEPS, lv + 1)} of ${FIT_STEPS} · ${nUsed} of ${NP} points · RMSE ${rmse.toFixed(3)}`;
+
+      // points: ones already in the fit are coloured by how far the surface
+      // still misses them (copper = far, teal = on the surface); the rest stay muted
+      const teal = new THREE.Color(COL.teal), copper = new THREE.Color(COL.copper), muted = new THREE.Color(COL.muted);
+      const c = new THREE.Color();
+      for (let k = 0; k < NP; k++) {
+        const surfV = sampleGrid(blended, PX[k], PY[k]);
+        const res = Math.abs(surfV - PZ[k]);
+        if (fitRank[k] < nUsed) c.copy(teal).lerp(copper, Math.min(1, res / 0.12));
+        else c.copy(muted);
+        ptCol[k*3] = c.r; ptCol[k*3+1] = c.g; ptCol[k*3+2] = c.b;
+        // residual line from the point to the current surface
+        const x = worldX(PX[k]), z = worldZ(PY[k]);
+        energyStickPos[k*6] = x; energyStickPos[k*6+1] = worldY(PZ[k]); energyStickPos[k*6+2] = z;
+        energyStickPos[k*6+3] = x; energyStickPos[k*6+4] = worldY(surfV); energyStickPos[k*6+5] = z;
+      }
+      ptGeo.attributes.color.needsUpdate = true;
+      energyStickGeo.attributes.position.needsUpdate = true;
+      energySticks.visible = true;
+      energyStickMat.opacity = 0.75 * (1 - smoothstep((t - 0.86) / 0.12));
+      const op = 1 - 0.8 * smoothstep((t - 0.88) / 0.12);
+      setPoints(PX, PY, PZ, op);
 
     } else {
       // Dynamics: static fitted surface + trajectory reveal
@@ -744,7 +1012,7 @@
     requestAnimationFrame(tick);
 
     if (!playing) {
-      renderer.render(scene, camera);
+      paint();
       return;
     }
 
@@ -755,13 +1023,14 @@
         currentFrac = 0;
         stageStart = now;
         renderStage(0, 0);
+        setBar(0);
       }
-      renderer.render(scene, camera);
+      paint();
       return;
     }
 
     const elapsed = now - stageStart;
-    let frac = elapsed / STAGE_DUR[stage];
+    let frac = elapsed / stageDur(stage);
     if (frac >= 1) {
       if (stage < 3) {
         stage += 1;
@@ -769,17 +1038,19 @@
         frac = 0;
       } else {
         frac = 1;
-        holdUntil = now + HOLD_MS;
+        holdUntil = now + holdDur();
       }
     }
     currentFrac = frac;
     renderStage(stage, frac);
-    renderer.render(scene, camera);
+    setBar(stage + frac);
+    paint();
   }
 
   // First paint before animation loop takes over
   renderStage(0, 1);
-  renderer.render(scene, camera);
+  setBar(0);
+  paint();
   setPlayIcon();
   requestAnimationFrame(tick);
 })();
