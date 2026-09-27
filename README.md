@@ -55,5 +55,9 @@ No changes to `_pages/about.md` are required when simply enabling or disabling a
 
 How to add photos or new place strips (HCU, UniPD, …): see **[how-to-update/memories.md](how-to-update/memories.md)**.
 
+## Journal cover strip (Home)
+
+How to add or change issue covers under **Where the work appeared**: see **[how-to-update/journal_covers.md](how-to-update/journal_covers.md)**.
+
 That folder is for local/repo notes only — it is excluded from the built website (same idea as this README).
 
