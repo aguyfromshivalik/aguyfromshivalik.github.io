@@ -27,5 +27,4 @@ latest_posts:
 
 Ciao!
 
-I come from <a href='https://en.m.wikipedia.org/wiki/Uttarakhand'>Uttarakhand</a>, India.
-Currently, I am working at University of Padova (UNiPD) with <a href='https://sites.google.com/view/sergio-rampino/home'>Dr. Sergio Rampino</a>. My research is in the field of reaction dynamics and exploration of ML applications in Chemistry. I obtained my PhD in Theoretical Chemistry under the guidance of <a href='http://chemistry.uohyd.ac.in/~sm/'>Prof. Susanta Mahapatra</a> from University of Hyderabad, Telangana, India.
+I am working at University of Padova (UNiPD) with <a href='https://sites.google.com/view/sergio-rampino/home'>Dr. Sergio Rampino</a>. My research is in the field of reaction dynamics and exploration of ML applications in Chemistry. I obtained my PhD in Theoretical Chemistry under the guidance of <a href='http://chemistry.uohyd.ac.in/~sm/'>Prof. Susanta Mahapatra</a> from University of Hyderabad, Telangana, India. I come from <a href='https://en.m.wikipedia.org/wiki/Uttarakhand'>Uttarakhand</a>, India.
