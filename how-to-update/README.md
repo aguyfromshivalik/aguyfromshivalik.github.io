@@ -1,7 +1,7 @@
 # How to update: main website
 
 Short guide for the parts of this site you change most often.
-Detailed notes for Memories and the journal-cover strip live in sibling files in this folder.
+Detailed notes for Memories, the journal-cover strip, and Others live in sibling files in this folder.
 
 This `how-to-update/` folder (and the root `README.md`) are **excluded from the built website** — they are for you in the repo only.
 
@@ -14,6 +14,7 @@ This `how-to-update/` folder (and the root `README.md`) are **excluded from the 
 | Publications (`/publications/`) | `_bibliography/papers.bib` + `assets/img/publication_preview/` |
 | Research (`/research/`) | `_pages/research.md` (+ `assets/html/pes_interactive.html` for the demo) |
 | Memories (`/memories/`) | See [memories.md](memories.md) |
+| Others (`/others/`) and Quotes | See [others.md](others.md) |
 | Contact (`/contact/`) | `_pages/contact.md` |
 | Nav bar tabs | `_pages/*.md` → `nav: true` / `nav_order` |
 | Social icons (Home bottom) | `_data/socials.yml` |
@@ -73,6 +74,36 @@ Each item is its own `.md` file (date + short text). They show on:
 - News page (`_pages/information.md` / `/news/` depending on your permalinks)
 
 To add news: copy an existing `_news/announcement_*.md`, set a new date/title/body, save. Newer dates appear first.
+
+### Optional photo(s)
+
+1. Put the image(s) in `assets/img/news/` (create the folder if needed).
+2. In the news `.md` front matter, use either one photo:
+
+```yaml
+image: news/my-photo.jpg
+image_alt: Short description   # optional
+```
+
+or two (or more):
+
+```yaml
+images:
+  - news/one.jpg
+  - news/two.jpg
+```
+
+Optional alts with the list form:
+
+```yaml
+images:
+  - path: news/one.jpg
+    alt: First photo
+  - path: news/two.jpg
+    alt: Second photo
+```
+
+Paths are relative to `assets/img/`. Small photos appear before the news text on the **News** page (`/news/`); Home → **What happened recently** stays text-only. Click a photo to open a same-page popup (blurred background). If there are two or more photos, use the arrows (or ←/→) to switch between them. Close with the button, backdrop click, or Escape.
 
 ---
 
@@ -149,6 +180,12 @@ See **[memories.md](memories.md)** — folders under `assets/img/memories/<place
 ## Journal cover strip (Home)
 
 See **[journal_covers.md](journal_covers.md)** — images in `assets/img/journal_covers/` + `_data/journal_covers.yml`.
+
+---
+
+## Others (quotes and later squares)
+
+See **[others.md](others.md)** — quote files in `_quotes/` and square tiles from pages with `others_section: true`.
 
 ---
 

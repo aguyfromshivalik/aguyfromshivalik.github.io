@@ -52,7 +52,7 @@ layout: default
       <h2>
         <a href="{{ '/news/' | relative_url }}" style="color: inherit">What happened recently</a>
       </h2>
-      {% include news.liquid limit=true %}
+      {% include news.liquid limit=true hide_photos=true %}
     {% endif %}
 
     <!-- Latest posts -->

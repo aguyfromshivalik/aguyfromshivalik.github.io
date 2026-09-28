@@ -6,7 +6,7 @@
     - file: group_2022.jpg
       width: 2400
       height: 1350
-      alt: SMLab at UoH, India (2022)
+      alt: SMLab (2022)
     - file: group_campus.jpg
       width: 2400
       height: 1600
@@ -22,7 +22,7 @@
     - file: group_formal.jpg
       width: 1445
       height: 963
-      alt: In a conference at IISc, Kolkata (2023)
+      alt: In a conference at IACS, Kolkata (2023)
     - file: campus_2020.jpg
       width: 1172
       height: 879
@@ -51,8 +51,8 @@
     - file: group_2025.jpg
       width: 1600
       height: 1200
-      alt: Theoretical Chemistry Group (TCG) at UniPD, Italia (2025)
+      alt: Theoretical Chemistry Group (TCG) (2025)
     - file: cycle.jpg
       width: 1800
       height: 2400
-      alt: La mia bicicletta, Padova
+      alt: La mia bicicletta
