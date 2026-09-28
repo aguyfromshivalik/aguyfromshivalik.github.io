@@ -44,12 +44,14 @@ nav_order: 9
         <div class="memories-stage" hidden>
           <div class="memories-stage-frame">
             <button type="button" class="memories-stage-nav memories-stage-prev" aria-label="Previous photo">‹</button>
-            <div class="memories-stage-viewport">
-              <img src="" alt="" class="memories-stage-img">
+            <div class="memories-stage-main">
+              <div class="memories-stage-viewport">
+                <img src="" alt="" class="memories-stage-img">
+              </div>
+              <p class="memories-stage-caption" hidden></p>
             </div>
             <button type="button" class="memories-stage-nav memories-stage-next" aria-label="Next photo">›</button>
           </div>
-          <p class="memories-stage-caption" hidden></p>
           <button type="button" class="memories-stage-close" aria-label="Close photo">Close</button>
         </div>
       {% else %}
