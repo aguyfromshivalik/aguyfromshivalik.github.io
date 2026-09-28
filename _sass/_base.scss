@@ -229,7 +229,7 @@ ul.task-list input[type="checkbox"] {
   // Home: photo aligns with name + bio as one hero unit.
   .home-about {
     .profile {
-      width: 34%;
+      width: 30%;
       margin-top: 0.2rem;
     }
 
@@ -501,6 +501,18 @@ ul.task-list input[type="checkbox"] {
   width: auto;
   height: auto;
   object-fit: contain;
+}
+
+.memories-stage-caption {
+  margin: 0.45rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  opacity: 0.8;
+}
+
+.memories-stage-caption[hidden] {
+  display: none !important;
 }
 
 .memories-stage-nav {

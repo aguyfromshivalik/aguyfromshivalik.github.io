@@ -49,6 +49,7 @@ nav_order: 9
             </div>
             <button type="button" class="memories-stage-nav memories-stage-next" aria-label="Next photo">›</button>
           </div>
+          <p class="memories-stage-caption" hidden></p>
           <button type="button" class="memories-stage-close" aria-label="Close photo">Close</button>
         </div>
       {% else %}
@@ -82,6 +83,7 @@ nav_order: 9
       var thumbs = Array.prototype.slice.call(place.querySelectorAll('.memories-thumb'));
       var stage = place.querySelector('.memories-stage');
       var stageImg = place.querySelector('.memories-stage-img');
+      var stageCaption = place.querySelector('.memories-stage-caption');
       var closeBtn = place.querySelector('.memories-stage-close');
       var stagePrev = place.querySelector('.memories-stage-prev');
       var stageNext = place.querySelector('.memories-stage-next');
@@ -93,8 +95,13 @@ nav_order: 9
         if (!thumbs.length) return;
         index = (i + thumbs.length) % thumbs.length;
         var btn = thumbs[index];
+        var caption = btn.getAttribute('data-alt') || '';
         stageImg.src = btn.getAttribute('data-full');
-        stageImg.alt = btn.getAttribute('data-alt') || '';
+        stageImg.alt = caption;
+        if (stageCaption) {
+          stageCaption.textContent = caption;
+          stageCaption.hidden = !caption;
+        }
         stage.hidden = false;
         activePlace = place;
         thumbs.forEach(function (el) {
@@ -107,6 +114,10 @@ nav_order: 9
       function closeStage() {
         stage.hidden = true;
         stageImg.removeAttribute('src');
+        if (stageCaption) {
+          stageCaption.textContent = '';
+          stageCaption.hidden = true;
+        }
         thumbs.forEach(function (el) {
           el.classList.remove('is-active');
         });
