@@ -1,58 +1,58 @@
 # Place-based memory strips. Add photos under assets/img/memories/<id>/
 - id: hcu
-  title: HCU
-  subtitle: University of Hyderabad
+  title: UoH days
+  subtitle: 7+ years of life
   photos:
     - file: group_2022.jpg
       width: 2400
       height: 1350
-      alt: Research group on campus, 2022
+      alt: SMLab at UoH, India (2022)
     - file: group_campus.jpg
       width: 2400
       height: 1600
-      alt: Group photo on campus
+      alt: With Dr. Alamgir & Dr. Supriyo in a conference at IITM (2024)
     - file: group_lab.jpg
       width: 2400
       height: 1589
-      alt: Lab group photo
+      alt: The very first group photo from SMLab (2018)
     - file: group_dinner.jpg
       width: 2400
       height: 1349
-      alt: Group dinner
+      alt: At group dinner with Dr. Mahapatra and madam
     - file: group_formal.jpg
       width: 1445
       height: 963
-      alt: Conference group photo
+      alt: In a conference at IISc, Kolkata (2023)
     - file: campus_2020.jpg
       width: 1172
       height: 879
-      alt: Friends on campus, 2020
+      alt: With friends on a outing
     - file: group_2022b.jpg
       width: 1024
       height: 768
-      alt: After a race on the track, 2022
+      alt: After 5K run at Gachibowli stadium
     - file: campus_2022.jpg
       width: 1280
       height: 853
-      alt: Evening gathering by the mural, 2022
+      alt: From birthday celebration of Dr. Aradhna
     - file: campus_2023.jpg
       width: 2400
       height: 1800
-      alt: Group at the school building, 2023
+      alt: Members of theoretical chemistry divison at UoH
     - file: moment_2023.jpg
       width: 1495
       height: 1121
-      alt: Campus moment, 2023
+      alt: From the group dinner (SMLab)
 
 - id: unipd
-  title: UniPD
-  subtitle: University of Padova
+  title: UniPD days
+  subtitle: A few years of postdoc
   photos:
     - file: group_2025.jpg
       width: 1600
       height: 1200
-      alt: At the lab, 2025
+      alt: Theoretical Chemistry Group (TCG) at UniPD, Italia (2025)
     - file: cycle.jpg
       width: 1800
       height: 2400
-      alt: Bike on the train, Padova
+      alt: La mia bicicletta, Padova
