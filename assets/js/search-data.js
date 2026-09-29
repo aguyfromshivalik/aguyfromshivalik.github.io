@@ -149,6 +149,16 @@ ninja.data = [{
           description: "",
           section: "Quotes",handler: () => {
               window.location.href = "/quotes/quote_1/";
+            },},{id: "shelf-pride-and-prejudice",
+          title: 'Pride and Prejudice',
+          description: "",
+          section: "Shelf",handler: () => {
+              window.location.href = "/shelf/pride-and-prejudice/";
+            },},{id: "shelf-the-prophet",
+          title: 'The Prophet',
+          description: "",
+          section: "Shelf",handler: () => {
+              window.location.href = "/shelf/the-prophet/";
             },},{
       id: 'light-theme',
       title: 'Change theme to light',
