@@ -2,7 +2,7 @@
 
 The **Others** tab (`/others/`) is a page of square tiles. Each tile is an image with a title under it. Clicking a tile opens that section.
 
-Right now there is one tile: **Quotes** (`/others/quotes/`).
+Tiles right now: **Collected quotes** (`/others/quotes/`) and **My bookshelf** (`/others/bookshelf/`).
 
 You normally do **not** edit `_pages/others.md`.
 
@@ -16,6 +16,7 @@ You normally do **not** edit `_pages/others.md`.
 | Blank quote to copy | `_quotes/copy-me.md` |
 | Quotes tile image | `assets/img/others/quotes.svg` |
 | List markup (rarely touch) | `_includes/quotes.liquid` |
+| My bookshelf page | See [bookshelf.md](bookshelf.md) |
 
 ## Add a quote
 
@@ -46,6 +47,10 @@ bundle exec jekyll serve --host 127.0.0.1 --port 4000
 ```
 
 The quotes folder is registered in `_config.yml`. A server that was already running before that change will not see new quote files until it is restarted.
+
+## Add a book
+
+See **[bookshelf.md](bookshelf.md)**.
 
 ## Change the Quotes picture
 

@@ -737,6 +737,150 @@ ul.task-list input[type="checkbox"] {
   }
 }
 
+.shelf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 1.25rem;
+  align-items: flex-start;
+}
+
+.shelf-book {
+  width: 9.5rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--global-text-color);
+  cursor: pointer;
+  text-align: center;
+
+  &:hover .shelf-cover {
+    transform: translateY(-2px);
+  }
+}
+
+.shelf-cover {
+  display: block;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border: 1px solid var(--global-divider-color);
+  background: var(--global-card-bg-color);
+  line-height: 0;
+  transition: transform 0.15s ease;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.shelf-caption {
+  display: block;
+  margin-top: 0.55rem;
+}
+
+.shelf-title,
+.shelf-author {
+  display: block;
+  line-height: 1.3;
+}
+
+.shelf-title {
+  font-size: 0.95rem;
+}
+
+.shelf-author {
+  margin-top: 0.15rem;
+  font-size: 0.85rem;
+  color: var(--global-text-color-light);
+}
+
+.shelf-book-fallback {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  padding: 0.75rem;
+  line-height: 1.3;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+body.shelf-popup-open {
+  overflow: hidden;
+}
+
+.shelf-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.shelf-popup[hidden] {
+  display: none !important;
+}
+
+.shelf-popup-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.shelf-popup-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(40rem, 92vw);
+  max-height: min(80vh, 36rem);
+  overflow: auto;
+  background: var(--global-bg-color);
+  border: 1px solid var(--global-divider-color);
+  padding: 1.15rem 1.4rem 1.6rem;
+}
+
+.shelf-popup-close {
+  display: block;
+  margin: 0 0 0.85rem auto;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid var(--global-divider-color);
+  background: transparent;
+  color: var(--global-text-color);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.shelf-popup-body {
+  h2 {
+    margin: 0 0 0.3rem;
+    font-size: 1.55rem;
+  }
+
+  .shelf-by {
+    margin: 0 0 1.15rem;
+    color: var(--global-text-color-light);
+  }
+
+  .shelf-source-body {
+    font-size: 1.05rem;
+    line-height: 1.7;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .others-empty {
   margin-top: 0.5rem;
   opacity: 0.75;

@@ -1,7 +1,7 @@
 # How to update: main website
 
 Short guide for the parts of this site you change most often.
-Detailed notes for Memories, the journal-cover strip, and Others live in sibling files in this folder.
+Detailed notes for Memories, the journal-cover strip, Others, and My bookshelf live in sibling files in this folder.
 
 This `how-to-update/` folder (and the root `README.md`) are **excluded from the built website** — they are for you in the repo only.
 
@@ -15,6 +15,7 @@ This `how-to-update/` folder (and the root `README.md`) are **excluded from the 
 | Research (`/research/`) | `_pages/research.md` (+ `assets/html/pes_interactive.html` for the demo) |
 | Memories (`/memories/`) | See [memories.md](memories.md) |
 | Others (`/others/`) and Quotes | See [others.md](others.md) |
+| My bookshelf (`/others/bookshelf/`) | See [bookshelf.md](bookshelf.md) |
 | Contact (`/contact/`) | `_pages/contact.md` |
 | Nav bar tabs | `_pages/*.md` → `nav: true` / `nav_order` |
 | Social icons (Home bottom) | `_data/socials.yml` |
@@ -186,6 +187,8 @@ See **[journal_covers.md](journal_covers.md)** — images in `assets/img/journal
 ## Others (quotes and later squares)
 
 See **[others.md](others.md)** — quote files in `_quotes/` and square tiles from pages with `others_section: true`.
+
+See **[bookshelf.md](bookshelf.md)** — one file per book in `_shelf/`, covers in `assets/img/shelf/`.
 
 ---
 

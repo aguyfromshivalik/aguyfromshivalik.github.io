@@ -152,6 +152,8 @@ collections:
     output: true
   quotes:
     output: false
+  shelf:
+    output: false
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
