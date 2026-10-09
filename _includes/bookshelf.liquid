@@ -1,0 +1,95 @@
+<div class="shelf-page">
+  {% assign books = site.shelf | sort: "order" %}
+  {% if books != blank and books.size > 0 %}
+    <div class="shelf">
+      {% for book in books %}
+        <button
+          type="button"
+          class="shelf-book"
+          data-shelf-id="shelf-book-{{ forloop.index }}"
+          aria-label="{{ book.title | escape }}"
+        >
+          <span class="shelf-cover">
+            {% if book.cover %}
+              <img src="{{ book.cover | relative_url }}" alt="">
+            {% else %}
+              <span class="shelf-book-fallback">{{ book.title }}</span>
+            {% endif %}
+          </span>
+          <span class="shelf-caption">
+            <span class="shelf-title">{{ book.title }}</span>
+            {% if book.author %}
+              <span class="shelf-author">{{ book.author }}</span>
+            {% endif %}
+          </span>
+        </button>
+      {% endfor %}
+    </div>
+
+    {% for book in books %}
+      <div id="shelf-book-{{ forloop.index }}" class="shelf-source" hidden>
+        <h2>{{ book.title }}</h2>
+        {% if book.author %}
+          <p class="shelf-by">{{ book.author }}</p>
+        {% endif %}
+        {% if book.content != blank %}
+          <div class="shelf-source-body">{{ book.content }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="others-empty">No books yet.</p>
+  {% endif %}
+
+  <div class="shelf-popup" hidden>
+    <button type="button" class="shelf-popup-backdrop" aria-label="Close"></button>
+    <div class="shelf-popup-dialog" role="dialog" aria-modal="true" aria-labelledby="shelf-popup-title">
+      <button type="button" class="shelf-popup-close">Close</button>
+      <div class="shelf-popup-body"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.querySelector('.shelf-page');
+    if (!root) return;
+    var popup = root.querySelector('.shelf-popup');
+    var popupBody = root.querySelector('.shelf-popup-body');
+    var closeBtn = root.querySelector('.shelf-popup-close');
+    var backdrop = root.querySelector('.shelf-popup-backdrop');
+    var lastFocus = null;
+
+    function openBook(id) {
+      var source = document.getElementById(id);
+      if (!source || !popup || !popupBody) return;
+      popupBody.innerHTML = source.innerHTML;
+      var heading = popupBody.querySelector('h2');
+      if (heading) heading.id = 'shelf-popup-title';
+      lastFocus = document.activeElement;
+      popup.hidden = false;
+      document.body.classList.add('shelf-popup-open');
+      closeBtn.focus();
+    }
+
+    function closeBook() {
+      if (!popup || popup.hidden) return;
+      popup.hidden = true;
+      popupBody.innerHTML = '';
+      document.body.classList.remove('shelf-popup-open');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    root.querySelectorAll('.shelf-book').forEach(function (button) {
+      button.addEventListener('click', function () {
+        openBook(button.getAttribute('data-shelf-id'));
+      });
+    });
+
+    closeBtn.addEventListener('click', closeBook);
+    backdrop.addEventListener('click', closeBook);
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeBook();
+    });
+  })();
+</script>

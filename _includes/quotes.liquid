@@ -1,0 +1,23 @@
+<div class="others-quotes">
+  {% if site.quotes != blank and site.quotes.size > 0 %}
+    {% assign quotes = site.quotes | sort: "date" | reverse %}
+    {% for quote in quotes %}
+      <article class="others-quote">
+        <div class="others-quote-body">
+          {{ quote.content }}
+        </div>
+        {% if quote.author or quote.source %}
+          <p class="others-quote-by">
+            {%- if quote.author -%}{{ quote.author }}{%- endif -%}
+            {%- if quote.source -%}
+              {%- if quote.author -%}, {% endif -%}
+              {{ quote.source }}
+            {%- endif -%}
+          </p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  {% else %}
+    <p class="others-empty">No quotes yet.</p>
+  {% endif %}
+</div>

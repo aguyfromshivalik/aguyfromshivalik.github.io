@@ -2,15 +2,16 @@
 layout: about
 title: Home
 permalink: /
-subtitle: Postdoc at <a href='https://www.chimica.unipd.it/'> DiSC</a> in <a href='https://www.unipd.it/'> UNiPD </a> with <a href='https://sites.google.com/view/sergio-rampino/home'> Dr. Sergio Rampino </a>
+subtitle: Postdoc working in theoretical chemistry @ <a href='https://www.chimica.unipd.it/'> DiSC</a> in <a href='https://www.unipd.it/'> UNiPD </a>.
 profile:
   align: right
   image: profile_pic.jpg
-  image_circular: true # crops the image to make it circular
-  more_info: 
-    
+  image_circular: false # square profile photo on home
+  more_info: >
 
-selected_papers: false # includes a list of papers marked as "selected={true}"
+
+selected_papers: true # includes a list of papers marked as "selected={true}"
+journal_covers: true # horizontal strip of issue covers above social logos
 social: true # includes social icons at the bottom of the page (true/false)
 
 announcements:
@@ -24,7 +25,6 @@ latest_posts:
   limit:  # leave blank to include all the blog posts (write a number for limit=number)
 ---
 
-Ciao!👋 
+Ciao!
 
-I come from <a href='https://en.m.wikipedia.org/wiki/Uttarakhand'> Uttarakhand</a>, India.
-Currently, at University of Padova (UNiPD), I am working in the field of reaction dynamics and exploring ML applications in Chemistry. I obtained my PhD in Theoretical Chemistry under the guidance of <a href='http://chemistry.uohyd.ac.in/~sm/'> Prof. Susanta Mahapatra</a> from University of Hyderabad, Telangana, India. <a href='/research/'> Click here </a> to know more about my work. To get connected send an email at `ajay[dot]rawat[at]unipd[dot]it`.
+I am working at University of Padova (UNiPD) with <a href='https://sites.google.com/view/sergio-rampino/home'>Dr. Sergio Rampino</a>. My research is in the field of reaction dynamics and exploration of ML applications in Chemistry. I obtained my PhD in Theoretical Chemistry under the guidance of <a href='http://chemistry.uohyd.ac.in/~sm/'>Prof. Susanta Mahapatra</a> from University of Hyderabad, Telangana, India. I come from <a href='https://en.m.wikipedia.org/wiki/Uttarakhand'>Uttarakhand</a>, India.

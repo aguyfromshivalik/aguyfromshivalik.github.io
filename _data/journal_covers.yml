@@ -1,0 +1,57 @@
+# Issue covers matching the volume/issue of each published paper.
+# Ordered newest → oldest for the home strip.
+- image: jcc_47_14.jpg
+  journal: J. Comput. Chem.
+  volume: "47"
+  issue: "14"
+  year: 2026
+  url: https://doi.org/10.1002/jcc.70397
+
+- image: jcp_165_12.jpg
+  journal: J. Chem. Phys.
+  volume: "165"
+  issue: "12"
+  year: 2026
+  url: https://doi.org/10.1063/5.0350415
+
+- image: jcp_163_6.jpg
+  journal: J. Chem. Phys.
+  volume: "163"
+  issue: "6"
+  year: 2025
+  url: https://doi.org/10.1063/5.0272519
+
+- image: jcp_161_12.jpg
+  journal: J. Chem. Phys.
+  volume: "161"
+  issue: "12"
+  year: 2024
+  url: https://doi.org/10.1063/5.0230496
+
+- image: resonance_29_10.jpg
+  journal: Resonance
+  volume: "29"
+  issue: "10"
+  year: 2024
+  url: https://doi.org/10.1007/s12045-024-1347-z
+
+- image: jpca_127_51.jpg
+  journal: J. Phys. Chem. A
+  volume: "127"
+  issue: "51"
+  year: 2023
+  url: https://doi.org/10.1021/acs.jpca.3c04131
+
+- image: jpca_125_16.jpg
+  journal: J. Phys. Chem. A
+  volume: "125"
+  issue: "16"
+  year: 2021
+  url: https://doi.org/10.1021/acs.jpca.1c01811
+
+- image: pccp_23_48.jpg
+  journal: Phys. Chem. Chem. Phys.
+  volume: "23"
+  issue: "48"
+  year: 2021
+  url: https://pubs.rsc.org/cp/article/23/48/27061/723380/Front-cover

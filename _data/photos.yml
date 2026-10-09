@@ -1,0 +1,58 @@
+# Place-based memory strips. Add photos under assets/img/memories/<id>/
+- id: hcu
+  title: UoH days
+  subtitle: 7+ years of life
+  photos:
+    - file: group_2022.jpg
+      width: 2400
+      height: 1350
+      alt: SMLab (2022)
+    - file: group_campus.jpg
+      width: 2400
+      height: 1600
+      alt: With Dr. Alamgir & Dr. Supriyo in a conference at IITM (2024)
+    - file: group_lab.jpg
+      width: 2400
+      height: 1589
+      alt: The very first group photo from SMLab (2018)
+    - file: group_dinner.jpg
+      width: 2400
+      height: 1349
+      alt: At group dinner with Dr. Mahapatra and madam
+    - file: group_formal.jpg
+      width: 1445
+      height: 963
+      alt: In a conference at IACS, Kolkata (2023)
+    - file: campus_2020.jpg
+      width: 1172
+      height: 879
+      alt: With friends on a outing
+    - file: group_2022b.jpg
+      width: 1024
+      height: 768
+      alt: After 5K run at Gachibowli stadium
+    - file: campus_2022.jpg
+      width: 1280
+      height: 853
+      alt: From birthday celebration of Dr. Aradhna
+    - file: campus_2023.jpg
+      width: 2400
+      height: 1800
+      alt: Members of theoretical chemistry divison at UoH
+    - file: moment_2023.jpg
+      width: 1495
+      height: 1121
+      alt: From the group dinner (SMLab)
+
+- id: unipd
+  title: UniPD days
+  subtitle: A few years of postdoc
+  photos:
+    - file: group_2025.jpg
+      width: 1600
+      height: 1200
+      alt: Theoretical Chemistry Group (TCG) (2025)
+    - file: cycle.jpg
+      width: 1800
+      height: 2400
+      alt: La mia bicicletta
